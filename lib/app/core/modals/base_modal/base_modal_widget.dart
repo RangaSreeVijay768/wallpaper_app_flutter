@@ -1,3 +1,4 @@
+import 'package:basic/app/themes/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -19,6 +20,7 @@ abstract class BaseModalWidget<T extends BaseModalController,
     getCubit(context).openModal();
     return showModalBottomSheet(
         context: context,
+        backgroundColor: AppColors.dark,
         isScrollControlled: true,
         builder: (context) {
           return BlocProvider.value(

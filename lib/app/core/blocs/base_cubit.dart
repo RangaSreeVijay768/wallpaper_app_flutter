@@ -20,7 +20,7 @@ abstract class BaseCubit<State> extends Cubit<State> {
   }
 
   showErrorMessage(String message) {
-    showMessage(message, Icons.close, AppColors.bgError);
+    showMessage(message, Icons.close, Colors.redAccent);
   }
 
   showSuccessMessage(String message){

@@ -2,6 +2,15 @@ import 'package:flutter/cupertino.dart';
 
 
 abstract class shadows {
+  static const bs_transparent = BoxShadow(
+    color: Color.fromRGBO(0, 0, 0, 0),
+    offset: Offset(
+      0,
+      0,
+    ),
+    blurRadius: 0.0,
+    spreadRadius: 0.0,
+  );
   static const bs_primary = BoxShadow(
     color: Color.fromRGBO(0, 0, 0, 0.2),
     offset: Offset(

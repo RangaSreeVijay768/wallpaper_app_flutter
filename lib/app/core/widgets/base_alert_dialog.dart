@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../ads/widgets/ads_banner_ad_widget/ads_banner_ad_widget.dart';
 import '../../themes/app_colors.dart';
 import '../../themes/borders.dart';
 import '../../themes/edge_insets.dart';
@@ -17,6 +18,7 @@ class BaseAlertDialog extends StatelessWidget {
   String? submitButtonTitle;
   Color? submitButtonTitleColor;
   ButtonStyle? submitButtonStyle;
+  bool? adShow;
 
   BaseAlertDialog(
       {super.key,
@@ -26,8 +28,9 @@ class BaseAlertDialog extends StatelessWidget {
       required this.body,
       required this.loadingButton,
       this.submitButtonTitle,
-        this.submitButtonTitleColor,
-      this.submitButtonStyle});
+      this.submitButtonTitleColor,
+      this.submitButtonStyle,
+      this.adShow});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +40,7 @@ class BaseAlertDialog extends StatelessWidget {
 
     return AlertDialog(
       insetPadding: edge_insets_0,
-      backgroundColor: AppColors.white,
+      backgroundColor: AppColors.grey3,
       titlePadding: edge_insets_0,
       actionsPadding: edge_insets_0,
       shape: RoundedRectangleBorder(borderRadius: borderRadius.br_10),
@@ -73,7 +76,7 @@ class BaseAlertDialog extends StatelessWidget {
       actions: [
         Container(
           padding: edge_insets_10,
-          decoration: BoxDecoration(border: borders.bt_1px_grey4),
+          decoration: BoxDecoration(border: borders.by_1px_grey4),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -96,23 +99,28 @@ class BaseAlertDialog extends StatelessWidget {
               const SizedBox(width: 20),
               Expanded(
                 child: TextButton(
-                  style: submitButtonStyle ?? TextButton.styleFrom(
-                      backgroundColor: AppColors.bgPrimary,
-                      disabledBackgroundColor: AppColors.grey1,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: borderRadius.br_5),
-                      padding: edge_insets_x_8),
+                  style: submitButtonStyle ??
+                      TextButton.styleFrom(
+                          backgroundColor: AppColors.bgPrimary,
+                          disabledBackgroundColor: AppColors.grey1,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: borderRadius.br_5),
+                          padding: edge_insets_x_8),
                   onPressed: onSubmit,
                   child: loadingButton
                       ? SizedBox(
                           height: 20,
                           width: 20,
-                          child: CircularProgressIndicator(color: submitButtonStyle != null ? AppColors.bgRed : AppColors.white),
+                          child: CircularProgressIndicator(
+                              color: submitButtonStyle != null
+                                  ? AppColors.bgRed
+                                  : AppColors.white),
                         )
                       : Text(
                           submitButtonTitle ?? 'Submit',
                           style: TextStyle(
-                              fontWeight: Fonts.f500, color: submitButtonTitleColor ?? AppColors.white),
+                              fontWeight: Fonts.f500,
+                              color: submitButtonTitleColor ?? AppColors.white),
                         ),
                 ),
               ),
@@ -122,6 +130,14 @@ class BaseAlertDialog extends StatelessWidget {
             ],
           ),
         ),
+        adShow == false
+            ? SizedBox(
+                height: 0,
+              )
+            : Container(
+                height: 60,
+                child: AdsBannerAdWidget(),
+              )
       ],
     );
   }

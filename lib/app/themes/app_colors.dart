@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 abstract class AppColors {
   static const Color primary = Color.fromRGBO(41, 66, 136, 1);
   static const Color bgPrimary = Color.fromRGBO(13, 139, 255, 1);
+  static const Color bgPrimary01 = Color.fromRGBO(13, 139, 255, 0.2);
   static const Color bgPrimary2 = Color.fromRGBO(13, 110, 255, 1);
   static const Color waterPrimary = Color.fromRGBO(0, 147, 183, 1);
   static const Color skyBlue = Color.fromRGBO(64, 165, 243, 1);
@@ -11,6 +12,10 @@ abstract class AppColors {
   static const Color textHeading = Color.fromRGBO(46, 46, 46, 1);
   static const Color textNormal = Color.fromRGBO(46, 46, 46, 1);
   static const Color transparent = Color.fromRGBO(0, 0, 0, 0);
+  static const Color transparent05 = Color.fromRGBO(0, 0, 0, 0.2);
+  static const Color dark = Color.fromRGBO(18, 32, 60, 1);
+  static const Color dark2 = Color.fromRGBO(18, 13, 40, 1);
+  static const Color grey5 = Color.fromRGBO(80, 80, 80, 1);
   static const Color grey1 = Color.fromRGBO(120, 120, 120, 1);
   static const Color grey2 = Color.fromRGBO(234, 234, 234, 1);
   static const Color grey3 = Color.fromRGBO(247, 247, 247, 1);
@@ -18,6 +23,7 @@ abstract class AppColors {
   static const Color white = Color.fromRGBO(255, 255, 255, 1);
   static const Color white03 = Color.fromRGBO(255, 255, 255, 0.3);
   static const Color white04 = Color.fromRGBO(255, 255, 255, 0.4);
+  static const Color white06 = Color.fromRGBO(255, 255, 255, 0.8);
   static const Color white09 = Color.fromRGBO(255, 255, 255, 0.9);
   static const Color white012 = Color.fromRGBO(255, 255, 255, 0.12);
   static const Color white018 = Color.fromRGBO(255, 255, 255, 0.18);
@@ -27,6 +33,7 @@ abstract class AppColors {
   static const Color bgError = Color.fromRGBO(224, 36, 36, 0.6);
   static const Color bgRed = Color.fromRGBO(224, 36, 36, 1);
   static const Color green = Color.fromRGBO(15, 184, 0, 1);
+  static const Color green05 = Color.fromRGBO(100, 180, 100, 0.6);
   static const Color coinProgress = Color.fromRGBO(255, 204, 102, 1);
   static const Color bmiTracker = Color.fromRGBO(115, 41, 209, 1);
   static const Color brown = Color.fromRGBO(197, 142, 76, 1);

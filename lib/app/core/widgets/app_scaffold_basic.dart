@@ -1,37 +1,43 @@
-// import 'package:basic/app/onboarding/widgets/onboarding_drawer_widget/onboarding_drawer_widget.dart';
-// import 'package:flutter/cupertino.dart';
-// import 'package:flutter/material.dart';
-//
-// import '../../escale/widgets/popup_menu_button_widget/popup_menu_button_widget.dart';
-// import '../../themes/app_colors.dart';
-//
-// class AppScaffoldBasic extends StatelessWidget {
-//   final Widget? body;
-//   final String? title;
-//   final Widget? appBarTitle;
-//   final Widget? bottomNavigationBar;
-//   final Widget? floatingActionButton;
-//
-//
-//
-//   AppScaffoldBasic({this.body, this.title, this.appBarTitle, this.bottomNavigationBar, this.floatingActionButton});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: AppColors.white,
-//       appBar: AppBar(
-//         title: appBarTitle,
-//         centerTitle: true,
-//         actions: [
-//           // PopupMenuButtonWidget(),
-//           SizedBox(width: 10,)
-//         ],
-//       ),
-//       drawer: OnboardingDrawerWidget(),
-//       body: body,
-//       floatingActionButton: floatingActionButton,
-//       bottomNavigationBar: bottomNavigationBar,
-//     );
-//   }
-// }
+import 'package:basic/app/onboarding/widgets/onboarding_drawer_widget/onboarding_drawer_widget.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+import '../../themes/app_colors.dart';
+
+class AppScaffoldBasic extends StatelessWidget {
+  final Widget? body;
+  final Widget? appBarTitle;
+  final Widget? bottomNavigationBar;
+  final Widget? floatingActionButton;
+  final Widget? appBarActionButton;
+  final TabBar? bottom;
+  final Size? appBarHeight;
+
+
+
+  AppScaffoldBasic({this.body, this.appBarTitle, this.bottomNavigationBar, this.floatingActionButton, this.appBarActionButton, this.bottom, this.appBarHeight});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.dark,
+      appBar: PreferredSize(
+          preferredSize: appBarHeight ?? const Size.fromHeight(50),
+          child: AppBar(
+            backgroundColor: AppColors.dark,
+            title: appBarTitle,
+            centerTitle: true,
+            iconTheme: const IconThemeData(color: AppColors.grey3),
+            bottom: bottom,
+            actions: [
+              appBarActionButton ?? SizedBox()
+            ],
+          )
+      ),
+      // drawer: OnboardingDrawerWidget(),
+      body: body,
+      floatingActionButton: floatingActionButton,
+      bottomNavigationBar: bottomNavigationBar,
+    );
+  }
+}

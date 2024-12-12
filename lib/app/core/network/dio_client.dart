@@ -4,7 +4,8 @@ import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 
 @singleton
-class ADioClient {
+@Order(-1)
+class DioClient {
   final dio = Dio();
 
   addInterceptors(InterceptorsWrapper interceptorsWrapper) {
@@ -13,10 +14,10 @@ class ADioClient {
 }
 
 abstract class RestService {
-  late ADioClient dioClient;
+  late DioClient dioClient;
 
   RestService() {
-    this.dioClient = GetIt.instance<ADioClient>();
+    this.dioClient = GetIt.instance<DioClient>();
     // this.dioClient.addInterceptors(EScaleInterceptors());
   }
 

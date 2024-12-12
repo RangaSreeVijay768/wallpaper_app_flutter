@@ -7,7 +7,7 @@ import 'fonts.dart';
 
 abstract class Buttons {
   static ButtonStyle sideMenuButton = TextButton.styleFrom(
-      backgroundColor: AppColors.white,
+      backgroundColor: AppColors.grey3,
       padding: edge_insets_y_12,
       shape: RoundedRectangleBorder(borderRadius: borderRadius.br_5));
 
@@ -23,7 +23,7 @@ abstract class Buttons {
         child: Text(
           text,
           style: const TextStyle(
-              color: AppColors.white, fontSize: Fonts.fontSize16, fontWeight: Fonts.f500),
+              color: AppColors.grey3, fontSize: Fonts.fontSize16, fontWeight: Fonts.f500),
         ));
   }
 

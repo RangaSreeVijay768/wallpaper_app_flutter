@@ -1,0 +1,211 @@
+import 'dart:async';
+import 'package:basic/app/ads/widgets/ads_native_ad/ads_native_ad.dart';
+import 'package:basic/app/images/widgets/get_all_images/get_all_images_controller.dart';
+import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../../core/database/boolean_status.dart';
+import '../../../core/models/image_models.dart';
+import '../../../core/widgets/app_scaffold_basic.dart';
+import '../../../themes/app_colors.dart';
+import '../../widgets/autoset_rules_modal/autoset_rules_modal.dart';
+import '/app/themes/borders.dart';
+import '/app/themes/edge_insets.dart';
+import 'package:go_router/go_router.dart';
+
+import 'wallpapers_auto_set_screen_controller.dart';
+import 'wallpapers_auto_set_screen_cubit.dart';
+
+import '/app/core/widgets/base_stateless_widget.dart';
+
+class WallpapersAutoSetScreen extends BaseStatelessWidget<
+    WallpapersAutoSetScreenController,
+    WallpapersAutoSetScreenCubit,
+    WallpapersAutoSetScreenState> {
+  VoidCallback? initializeTimerAgain;
+
+  WallpapersAutoSetScreen(
+      {Key? key,
+      super.controller,
+      super.onStateChanged,
+      this.initializeTimerAgain})
+      : super(key: key);
+  late List<Images> imagesData = [];
+  late BooleanStatus imageStatus = BooleanStatus.pending;
+  GetAllImagesController getAllImagesController = GetAllImagesController();
+  TextEditingController timeController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider<WallpapersAutoSetScreenCubit>(
+      create: (context) => createCubitAndAssignToController(context),
+      child: BlocConsumer<WallpapersAutoSetScreenCubit,
+          WallpapersAutoSetScreenState>(
+        listener: (context, state) {
+          if (onStateChanged != null) {
+            onStateChanged!(state);
+          }
+        },
+        builder: (context, state) {
+          initializeController(context);
+          return AppScaffoldBasic(
+            appBarTitle: Text(
+              "Auto Set Wallpaper",
+              style: TextStyle(color: AppColors.grey3),
+            ),
+            appBarActionButton: IconButton(
+                onPressed: (){
+                  context.push('/settings');
+                },
+                icon: Icon(Icons.settings)
+            ),
+            body: Container(
+              margin: edge_insets_16,
+              child: Column(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                        border: borders.b_2px_bgLightBlue,
+                        borderRadius: borderRadius.br_10),
+                    child: SwitchListTile(
+                      activeColor: AppColors.green,
+                      title: Text(
+                        state.isTimerEnabled == false
+                            ? "Turn on Auto wallpaper"
+                            : "Auto wallpaper turned on",
+                        style: TextStyle(color: AppColors.grey3),
+                      ),
+                      value: state.isTimerEnabled,
+                      onChanged: state.selectedScreens.isEmpty
+                          ? null
+                          : (value) async {
+                        try {
+                          final prefs = await SharedPreferences.getInstance();
+                          await prefs.setBool('isTimerEnabled', value);
+                          getCubit(context)
+                              .emitState(state.copyWith(isTimerEnabled: value));
+                        } finally {
+                          Future.delayed(Duration(seconds: 1)).then((_) {
+                            getCubit(context).initializeBackgroundService();
+                          });
+                        }
+                      },
+                    ),
+                  ),
+                  Container(
+                    margin: edge_insets_t_16,
+                    decoration: BoxDecoration(
+                        color: state.selectedScreens.contains('HOME')
+                            ? state.isTimerEnabled != false
+                                ? AppColors.grey5
+                                : AppColors.green05
+                            : AppColors.grey5,
+                        borderRadius: borderRadius.br_5,
+                        border: state.selectedScreens.contains('HOME')
+                            ? borders.b_2px_bgLightBlue
+                            : null),
+                    child: CheckboxListTile(
+                      activeColor: AppColors.bgPrimary2,
+                      side: BorderSide(color: AppColors.bgLightBlue, width: 2),
+                      onChanged: state.isTimerEnabled != false
+                          ? null
+                          : (_) async {
+                              await getCubit(context).setSelectedScreen('HOME');
+                            },
+                      title: Text(
+                        state.selectedScreens.contains('HOME')
+                            ? "Turn off HOME SCREEN"
+                            : "Set for HOME SCREEN",
+                        style: TextStyle(color: AppColors.white),
+                      ),
+                      value: state.selectedScreens.contains('HOME'),
+                    ),
+                  ),
+                  Container(
+                    margin: edge_insets_t_16,
+                    decoration: BoxDecoration(
+                        color: state.selectedScreens.contains('LOCK')
+                            ? state.isTimerEnabled != false
+                            ? AppColors.grey5
+                            : AppColors.green05
+                            : AppColors.grey5,
+                        borderRadius: borderRadius.br_5,
+                        border: state.selectedScreens.contains('LOCK')
+                            ? borders.b_2px_bgLightBlue
+                            : null),
+                    child: CheckboxListTile(
+                        activeColor: AppColors.bgPrimary2,
+                        side:
+                            BorderSide(color: AppColors.bgLightBlue, width: 2),
+                        value: state.selectedScreens.contains('LOCK'),
+                        onChanged: state.isTimerEnabled != false
+                            ? null
+                            : (_) async {
+                                await getCubit(context)
+                                    .setSelectedScreen('LOCK');
+                              },
+                        title: Text(
+                          state.selectedScreens.contains('LOCK')
+                              ? "Turn off LOCK SCREEN"
+                              : "Set for LOCK SCREEN",
+                          style: TextStyle(color: AppColors.white),
+                        )),
+                  ),
+                  Container(
+                    height: 100,
+                    margin: edge_insets_t_24,
+                    child: AdsNativeAd(templateType: TemplateType.small),
+                  ),
+                ],
+              ),
+            ),
+            floatingActionButton: Container(
+              margin: edge_insets_b_16,
+              child: AutosetRulesModal(),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  @override
+  WallpapersAutoSetScreenCubit createCubitAndAssignToController(
+      BuildContext context) {
+    WallpapersAutoSetScreenCubit cubit =
+        WallpapersAutoSetScreenCubit(context: context);
+    controller?.cubit = cubit;
+    controller?.childContext = context;
+    return cubit;
+  }
+}
+
+
+
+
+class WallpapersAutoSetScreenNoTemplate extends WallpapersAutoSetScreen {
+  WallpapersAutoSetScreenNoTemplate({super.key, super.controller, super.onStateChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider<WallpapersAutoSetScreenCubit>(
+      create: (context) => createCubitAndAssignToController(context),
+      child: BlocConsumer<WallpapersAutoSetScreenCubit,
+          WallpapersAutoSetScreenState>(
+        listener: (context, state) {
+          if (onStateChanged != null) {
+            onStateChanged!(state);
+          }
+        },
+        builder: (context, state) {
+          initializeController(context);
+          return Container();
+        },
+      ),
+    );
+  }
+
+}
