@@ -1,4 +1,5 @@
 import 'package:basic/app/ads/widgets/ads_banner_ad_widget/ads_banner_ad_widget.dart';
+import 'package:basic/app/core/widgets/loading_emoji_widget.dart';
 import 'package:basic/app/images/repos/get_all_images_by_category/get_all_images_by_category_response.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -174,7 +175,7 @@ class GetAllImagesByCategory
                             width: double.infinity,
                             height: double.infinity,
                             placeholder: (context, url) => Center(
-                              child: CircularProgressIndicator(),
+                              child: LoadingEmojiWidget(),
                             ),
                             errorWidget: (context, url, error) {
                               return Image.asset(

@@ -82,6 +82,14 @@ class WallpapersAutoSetScreenCubit
     await prefs.setInt('screenHeight', screenHeight);
     await prefs.setInt('screenWidth', screenWidth);
   }
+  Future<bool> checkInternetConnection() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
+    } catch (e) {
+      return false;
+    }
+  }
 
   Future<void> loadSwitchState() async {
     final prefs = await SharedPreferences.getInstance();
@@ -149,30 +157,38 @@ void onStart(ServiceInstance service) async {
     logger.d('timer initialized');
     ShowToast.toast('Auto wallpaper service initialized', Colors.greenAccent);
     final initialImageUrl = 'https://drive.google.com/uc?export=view&id=${imagesData[0]}';
+    final initialImageUrlLockScreen = 'https://drive.google.com/uc?export=view&id=${imagesData[1]}';
     if (selectedScreens.contains('HOME')) {
       await setWallpaperBackground(initialImageUrl, WallpaperManager.HOME_SCREEN);
     }
     if (selectedScreens.contains('LOCK')) {
-      await setWallpaperBackground(initialImageUrl, WallpaperManager.LOCK_SCREEN);
+      await setWallpaperBackground(initialImageUrlLockScreen, WallpaperManager.LOCK_SCREEN);
     }
     int currentIndex = 1;
+    int lockScreenIndex = 2;
     Timer.periodic(Duration(minutes: interval), (timer) async {
       ShowToast.toast('Auto setting wallpaper', Colors.greenAccent);
 
       if (currentIndex >= imagesData.length) {
         currentIndex = 0;
       }
+      if (currentIndex >= imagesData.length) {
+        lockScreenIndex = 1;
+      }
       final imageId = imagesData[currentIndex];
+      final lockScreenImageId = imagesData[lockScreenIndex];
       final imageUrl = 'https://drive.google.com/uc?export=view&id=$imageId';
+      final imageUrlLockScreen = 'https://drive.google.com/uc?export=view&id=$lockScreenImageId';
       logger.d(imageUrl);
 
       if (selectedScreens.contains('HOME')) {
         await setWallpaperBackground(imageUrl, WallpaperManager.HOME_SCREEN);
       }
       if (selectedScreens.contains('LOCK')) {
-        await setWallpaperBackground(imageUrl, WallpaperManager.LOCK_SCREEN);
+        await setWallpaperBackground(imageUrlLockScreen, WallpaperManager.LOCK_SCREEN);
       }
       currentIndex++;
+      lockScreenIndex++;
     });
     return;
   } else {

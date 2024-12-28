@@ -18,11 +18,12 @@ abstract class LoadingIndicator{
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          LoadingAnimationWidget.discreteCircle(
+          LoadingAnimationWidget.inkDrop(
               color: AppColors.bgPrimary,
               size: 50,
-              secondRingColor: AppColors.bmiTracker,
-              thirdRingColor: AppColors.waterPrimary),
+              // secondRingColor: AppColors.bmiTracker,
+              // thirdRingColor: AppColors.waterPrimary
+          ),
           const SizedBox(
             width: 20,
           ),

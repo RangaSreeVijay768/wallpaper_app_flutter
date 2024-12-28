@@ -1,3 +1,4 @@
+import 'package:basic/app/core/widgets/loading_emoji_widget.dart';
 import 'package:basic/app/wallpaper/screens/wallpapers_favorites_profile_view_screen/wallpapers_favorites_profile_view_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -121,7 +122,7 @@ class WallpaperGetAllFavoriteProfiles
                             width: double.infinity,
                             height: double.infinity,
                             placeholder: (context, url) => Center(
-                              child: CircularProgressIndicator(),
+                              child: LoadingEmojiWidget(),
                             ),
                             errorWidget: (context, url, error) {
                               return Image.asset(

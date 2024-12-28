@@ -10,4 +10,11 @@ abstract class Themes {
         primary: AppColors.bgPrimary,
       ),
       textTheme: Typography().black.apply(fontFamily: Fonts.fontNunito));
+
+  static ThemeData darkTheme = ThemeData.dark(useMaterial3: true).copyWith(
+    // fontFamily: Fonts.fontNunito,
+      colorScheme: const ColorScheme.light(
+        primary: AppColors.bgPrimary,
+      ),
+      textTheme: Typography().white.apply(fontFamily: Fonts.fontNunito));
 }

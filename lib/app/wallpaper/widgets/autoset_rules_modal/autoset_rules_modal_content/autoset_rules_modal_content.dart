@@ -43,8 +43,9 @@ class AutosetRulesModalContent
         },
         builder: (context, state) {
           initializeController(context);
+          final largeScreen = MediaQuery.sizeOf(context).width > 600;
           return Container(
-            height: MediaQuery.sizeOf(context).height * 0.65,
+            height: MediaQuery.sizeOf(context).height * 0.68,
             decoration: BoxDecoration(
               border: borders.b_1px_grey4,
               borderRadius: borderRadius.br_t_20
@@ -75,29 +76,77 @@ class AutosetRulesModalContent
                 ),
                 Expanded(
                     child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Container(
-                            margin: edge_insets_16,
-                            child: Text(
+                      child: Container(
+                        margin: edge_insets_16,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
                               "1. Activate a Screen\n"
-                                  "   Select a screen to enable the auto wallpaper switch.\n\n"
-                                  "2. Service Initialization\n"
-                                  "   Once the switch is turned on, the service will start and continue to run until you manually stop it.\n\n"
-                                  "3. Ensure Network Connectivity\n"
-                                  "   To keep the service running without interruptions, make sure mobile data is turned on.\n\n"
-                                  "4. Default Timer Setting\n"
-                                  "   By default, the timer is set to 30 minutes, changing the wallpaper seamlessly at this interval.\n\n"
-                                  "5. Customizable Timer\n"
+                                  "   Select a screen to enable the auto wallpaper switch.",
+                              style: TextStyle(
+                                fontSize: Fonts.fontSize14,
+                                color: AppColors.grey3,
+                              ),
+                            ),
+                            SizedBox(height: 6,),
+                            Text(
+                              "2. Service Initialization\n"
+                                  "   Once the switch is turned on, the service will start and continue to run until you manually stop it.",
+                              style: TextStyle(
+                                fontSize: Fonts.fontSize14,
+                                color: AppColors.grey3,
+                              ),
+                            ),
+                            SizedBox(height: 6,),
+                            Text(
+                              "3. Ensure Network Connectivity\n"
+                                  "   To keep the service running without interruptions, make sure mobile data is turned on.",
+                              style: TextStyle(
+                                fontSize: Fonts.fontSize14,
+                                color: AppColors.grey3,
+                              ),
+                            ),
+                            SizedBox(height: 6,),
+                            Text(
+                              "4. Default Timer Setting\n"
+                                  "   By default, the timer is set to 30 minutes, changing the wallpaper seamlessly at this interval.",
+                              style: TextStyle(
+                                fontSize: Fonts.fontSize14,
+                                color: AppColors.grey3,
+                              ),
+                            ),
+                            SizedBox(height: 6,),
+                            Text(
+                              "5. Customizable Timer\n"
                                   "   You can adjust the timer settings as per your preference.",
                               style: TextStyle(
                                 fontSize: Fonts.fontSize14,
                                 color: AppColors.grey3,
                               ),
                             ),
-                          ),
-                          AdsNativeAd(templateType: TemplateType.medium)
-                        ],
+                            SizedBox(height: 6,),
+                            Text(
+                              "6. Update Images\n"
+                                  "   You need to restart the app to update images. Everytime you restart the app, images will be updated",
+                              style: TextStyle(
+                                fontSize: Fonts.fontSize14,
+                                color: AppColors.grey3,
+                              ),
+                            ),
+                            SizedBox(height: 12,),
+                            Row(
+                              children: [
+                                Expanded(
+                                    child: AdsNativeAd(templateType: TemplateType.medium)
+                                ),
+                                largeScreen
+                                    ? Expanded(child: AdsNativeAd(templateType: TemplateType.medium))
+                                    : SizedBox()
+                              ],
+                            )
+                          ],
+                        ),
                       ),
                     )
                 ),

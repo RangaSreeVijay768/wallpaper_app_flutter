@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:basic/app/ads/widgets/ads_native_ad/ads_native_ad.dart';
 import 'package:basic/app/core/database/boolean_status.dart';
 import 'package:basic/app/core/models/image_models.dart';
+import 'package:basic/app/core/widgets/loading_emoji_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/widgets.dart';
@@ -165,7 +166,7 @@ class WallpapersGetAllImages extends BaseStatelessWidget<
                                     width: double.infinity,
                                     height: double.infinity,
                                     placeholder: (context, url) => Center(
-                                      child: CircularProgressIndicator(),
+                                      child: LoadingEmojiWidget(),
                                     ),
                                     errorWidget: (context, url, error) =>
                                         Image.asset(

@@ -1,4 +1,5 @@
 import 'package:basic/app/core/models/profile_models.dart';
+import 'package:basic/app/core/widgets/loading_emoji_widget.dart';
 import 'package:basic/app/wallpaper/services/favourites_profile_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import '../../../ads/widgets/ads_banner_ad_widget/ads_banner_ad_widget.dart';
 import '../../../core/models/image_models.dart';
 import '../../../themes/app_colors.dart';
 import '../../services/favourite_service.dart';
@@ -56,7 +58,7 @@ class WallpaperProfilePicViewScreen
             body: GestureDetector(
               onVerticalDragUpdate: (details) {
                 if (details.primaryDelta! > 10) {
-                  context.pop();
+                  Navigator.pop(context);
                 }
               },
               onTap: () {
@@ -87,7 +89,7 @@ class WallpaperProfilePicViewScreen
                           width: double.infinity,
                           height: double.infinity,
                           placeholder: (context, url) => Center(
-                            child: CircularProgressIndicator(),
+                            child: LoadingEmojiWidget(),
                           ),
                           errorWidget: (context, url, error) {
                             return Image.asset(
@@ -166,85 +168,96 @@ class WallpaperProfilePicViewScreen
                                   ),
                                   Container(
                                     color: AppColors.transparent05,
-                                    padding: edge_insets_x_16_y_24,
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    padding: edge_insets_x_16,
+                                    child: Column(
                                       children: [
-                                        ValueListenableBuilder(
-                                            valueListenable: getCubit(context).isSharingNotifier,
-                                            builder: (context, isSharing, child){
-                                              return Stack(
-                                                alignment: Alignment.centerLeft,
-                                                children: [
-                                                  IconButton(
-                                                    style: ElevatedButton.styleFrom(
-                                                        backgroundColor: AppColors.white,
-                                                        disabledBackgroundColor:
-                                                        AppColors.white,
-                                                        padding: edge_insets_12),
-                                                    onPressed: isSharing
-                                                        ? null
-                                                        : () async {
-                                                      await getCubit(context).shareImage(imageUrl, context);
-                                                    },
-                                                    icon: Icon(
-                                                      Icons.share,
-                                                      size: 30,
-                                                    ),
-                                                  ),
-                                                  if (isSharing)
-                                                    Container(
-                                                      margin: edge_insets_l_5,
-                                                      height: 45,
-                                                      width: 45,
-                                                      child: CircularProgressIndicator(
-                                                        color: AppColors.bgPrimary2,
-                                                        strokeWidth: 6,
+                                        Container(
+                                          padding: edge_insets_y_24,
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              ValueListenableBuilder(
+                                                  valueListenable: getCubit(context).isSharingNotifier,
+                                                  builder: (context, isSharing, child){
+                                                    return Stack(
+                                                      alignment: Alignment.centerLeft,
+                                                      children: [
+                                                        IconButton(
+                                                          style: ElevatedButton.styleFrom(
+                                                              backgroundColor: AppColors.white,
+                                                              disabledBackgroundColor:
+                                                              AppColors.white,
+                                                              padding: edge_insets_12),
+                                                          onPressed: isSharing
+                                                              ? null
+                                                              : () async {
+                                                            await getCubit(context).shareImage(imageUrl, context);
+                                                          },
+                                                          icon: Icon(
+                                                            Icons.share,
+                                                            size: 30,
+                                                          ),
+                                                        ),
+                                                        if (isSharing)
+                                                          Container(
+                                                            margin: edge_insets_l_5,
+                                                            height: 45,
+                                                            width: 45,
+                                                            child: CircularProgressIndicator(
+                                                              color: AppColors.bgPrimary2,
+                                                              strokeWidth: 6,
+                                                            ),
+                                                          ),
+                                                      ],
+                                                    );
+                                                  }
+                                              ),
+                                              ValueListenableBuilder<bool>(
+                                                valueListenable:
+                                                getCubit(context).isDownloadingNotifier,
+                                                builder: (context, isDownloading, child) {
+                                                  return Stack(
+                                                    alignment: Alignment.center,
+                                                    children: [
+                                                      IconButton(
+                                                        style: ElevatedButton.styleFrom(
+                                                            backgroundColor: AppColors.white,
+                                                            disabledBackgroundColor:
+                                                            AppColors.white,
+                                                            padding: edge_insets_12),
+                                                        onPressed: isDownloading
+                                                            ? null
+                                                            : () async {
+                                                          await getCubit(context)
+                                                              .downloadImage(
+                                                              imageUrl, context);
+                                                        },
+                                                        icon: Icon(
+                                                          Icons.download_outlined,
+                                                          size: 40,
+                                                        ),
                                                       ),
-                                                    ),
-                                                ],
-                                              );
-                                            }
+                                                      if (isDownloading)
+                                                        SizedBox(
+                                                          height: 50,
+                                                          width: 50,
+                                                          child: CircularProgressIndicator(
+                                                            color: AppColors.bgPrimary2,
+                                                            strokeWidth: 6,
+                                                          ),
+                                                        ),
+                                                    ],
+                                                  );
+                                                },
+                                              ),
+                                              SetWallpaperPopup(imageUrl: imageUrl),
+                                            ],
+                                          ),
                                         ),
-                                        ValueListenableBuilder<bool>(
-                                          valueListenable:
-                                          getCubit(context).isDownloadingNotifier,
-                                          builder: (context, isDownloading, child) {
-                                            return Stack(
-                                              alignment: Alignment.center,
-                                              children: [
-                                                IconButton(
-                                                  style: ElevatedButton.styleFrom(
-                                                      backgroundColor: AppColors.white,
-                                                      disabledBackgroundColor:
-                                                      AppColors.white,
-                                                      padding: edge_insets_12),
-                                                  onPressed: isDownloading
-                                                      ? null
-                                                      : () async {
-                                                    await getCubit(context)
-                                                        .downloadImage(
-                                                        imageUrl, context);
-                                                  },
-                                                  icon: Icon(
-                                                    Icons.download_outlined,
-                                                    size: 40,
-                                                  ),
-                                                ),
-                                                if (isDownloading)
-                                                  SizedBox(
-                                                    height: 50,
-                                                    width: 50,
-                                                    child: CircularProgressIndicator(
-                                                      color: AppColors.bgPrimary2,
-                                                      strokeWidth: 6,
-                                                    ),
-                                                  ),
-                                              ],
-                                            );
-                                          },
+                                        Container(
+                                          height: 60,
+                                          child: AdsBannerAdWidget(),
                                         ),
-                                        SetWallpaperPopup(imageUrl: imageUrl),
                                       ],
                                     ),
                                   ),

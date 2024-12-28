@@ -88,6 +88,7 @@ const edge_insets_y_24 = EdgeInsets.only(top: 24, bottom: 24);
 const edge_insets_x_4_y_1 = EdgeInsets.fromLTRB(4, 1, 4, 2);
 const edge_insets_x_4_y_8 = EdgeInsets.fromLTRB(4, 8, 4, 8);
 const edge_insets_x_7_y_7 = EdgeInsets.fromLTRB(7, 7, 7, 7);
+const edge_insets_x_16_t_16 = EdgeInsets.fromLTRB(16, 16, 16, 0);
 const edge_insets_x_8_t_16_b_6 = EdgeInsets.fromLTRB(8, 16, 8, 6);
 const edge_insets_x_12_y_8 = EdgeInsets.fromLTRB(12, 8, 12, 8);
 const edge_insets_x_16_y_10 = EdgeInsets.fromLTRB(16, 10, 16, 10);

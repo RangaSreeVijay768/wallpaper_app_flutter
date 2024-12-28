@@ -1,4 +1,5 @@
 import 'package:basic/app/ads/widgets/ads_banner_ad_widget/ads_banner_ad_widget.dart';
+import 'package:basic/app/core/widgets/loading_emoji_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/widgets.dart';
@@ -51,7 +52,7 @@ class WallpapersViewScreen
             body: GestureDetector(
               onVerticalDragUpdate: (details) {
                 if (details.primaryDelta! > 10) {
-                  context.pop();
+                  Navigator.pop(context);
                 }
               },
               onTap: () {
@@ -82,7 +83,7 @@ class WallpapersViewScreen
                           width: double.infinity,
                           height: double.infinity,
                           placeholder: (context, url) => Center(
-                            child: CircularProgressIndicator(),
+                            child: LoadingEmojiWidget(),
                           ),
                           errorWidget: (context, url, error) {
                             return Image.asset(
@@ -125,7 +126,7 @@ class WallpapersViewScreen
                                             backgroundColor: AppColors.white,
                                           ),
                                           onPressed: () {
-                                            context.pop();
+                                            Navigator.pop(context);
                                           },
                                           icon: Icon(Icons.arrow_back, size: 25,),
                                         ),

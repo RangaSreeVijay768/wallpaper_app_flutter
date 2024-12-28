@@ -53,7 +53,7 @@ class OnboardingWallpaperOfflineViewScreen
             body: GestureDetector(
               onVerticalDragUpdate: (details) {
                 if (details.primaryDelta! > 10) {
-                  context.pop();
+                  Navigator.pop(context);
                 }
               },
               onTap: () {
@@ -99,7 +99,7 @@ class OnboardingWallpaperOfflineViewScreen
                                       shadowColor: AppColors.bgPrimary2,
                                     ),
                                     onPressed: () {
-                                      context.pop();
+                                      Navigator.pop(context);
                                     },
                                     icon: Icon(Icons.arrow_back),
                                   ),

@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:basic/app/ads/widgets/ads_native_ad/ads_native_ad.dart';
+import 'package:basic/app/core/logger/log.dart';
 import 'package:basic/app/images/widgets/get_all_images/get_all_images_controller.dart';
+import 'package:basic/app/themes/toast.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,6 +14,7 @@ import '../../../core/models/image_models.dart';
 import '../../../core/widgets/app_scaffold_basic.dart';
 import '../../../themes/app_colors.dart';
 import '../../widgets/autoset_rules_modal/autoset_rules_modal.dart';
+import '../wallpapers_settings_screen/wallpapers_settings_screen.dart';
 import '/app/themes/borders.dart';
 import '/app/themes/edge_insets.dart';
 import 'package:go_router/go_router.dart';
@@ -51,6 +54,7 @@ class WallpapersAutoSetScreen extends BaseStatelessWidget<
         },
         builder: (context, state) {
           initializeController(context);
+          final largeScreen = MediaQuery.sizeOf(context).width > 600;
           return AppScaffoldBasic(
             appBarTitle: Text(
               "Auto Set Wallpaper",
@@ -58,108 +62,133 @@ class WallpapersAutoSetScreen extends BaseStatelessWidget<
             ),
             appBarActionButton: IconButton(
                 onPressed: (){
-                  context.push('/settings');
+                  showDialog(
+                      context: context,
+                      builder: (context) => WallpapersSettingsScreen()
+                  );
                 },
                 icon: Icon(Icons.settings)
             ),
-            body: Container(
-              margin: edge_insets_16,
-              child: Column(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                        border: borders.b_2px_bgLightBlue,
-                        borderRadius: borderRadius.br_10),
-                    child: SwitchListTile(
-                      activeColor: AppColors.green,
-                      title: Text(
-                        state.isTimerEnabled == false
-                            ? "Turn on Auto wallpaper"
-                            : "Auto wallpaper turned on",
-                        style: TextStyle(color: AppColors.grey3),
+            body: SingleChildScrollView(
+              child: Container(
+                margin: edge_insets_16,
+                child: Column(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                          border: borders.b_2px_bgLightBlue,
+                          borderRadius: borderRadius.br_10),
+                      child: SwitchListTile(
+                        activeColor: AppColors.green,
+                        title: Text(
+                          state.isTimerEnabled == false
+                              ? "Turn on Auto wallpaper"
+                              : "Auto wallpaper turned on",
+                          style: TextStyle(color: AppColors.grey3),
+                        ),
+                        value: state.isTimerEnabled,
+                        onChanged: state.selectedScreens.isEmpty
+                            ? null
+                            : (value) async {
+                          if (value) {
+                            final hasInternet = await getCubit(context).checkInternetConnection();
+                            if (!hasInternet) {
+                              ShowToast.toast("No internet connection available.", Colors.redAccent);
+                              return;
+                            }
+                          }
+                          try {
+                            final prefs = await SharedPreferences.getInstance();
+                            await prefs.setBool('isTimerEnabled', value);
+                            getCubit(context)
+                                .emitState(state.copyWith(isTimerEnabled: value));
+                          } finally {
+                            Future.delayed(Duration(seconds: 1)).then((_) {
+                              getCubit(context).initializeBackgroundService();
+                            });
+                          }
+                        },
                       ),
-                      value: state.isTimerEnabled,
-                      onChanged: state.selectedScreens.isEmpty
-                          ? null
-                          : (value) async {
-                        try {
-                          final prefs = await SharedPreferences.getInstance();
-                          await prefs.setBool('isTimerEnabled', value);
-                          getCubit(context)
-                              .emitState(state.copyWith(isTimerEnabled: value));
-                        } finally {
-                          Future.delayed(Duration(seconds: 1)).then((_) {
-                            getCubit(context).initializeBackgroundService();
-                          });
-                        }
-                      },
                     ),
-                  ),
-                  Container(
-                    margin: edge_insets_t_16,
-                    decoration: BoxDecoration(
-                        color: state.selectedScreens.contains('HOME')
-                            ? state.isTimerEnabled != false
-                                ? AppColors.grey5
-                                : AppColors.green05
-                            : AppColors.grey5,
-                        borderRadius: borderRadius.br_5,
-                        border: state.selectedScreens.contains('HOME')
-                            ? borders.b_2px_bgLightBlue
-                            : null),
-                    child: CheckboxListTile(
-                      activeColor: AppColors.bgPrimary2,
-                      side: BorderSide(color: AppColors.bgLightBlue, width: 2),
-                      onChanged: state.isTimerEnabled != false
-                          ? null
-                          : (_) async {
-                              await getCubit(context).setSelectedScreen('HOME');
-                            },
-                      title: Text(
-                        state.selectedScreens.contains('HOME')
-                            ? "Turn off HOME SCREEN"
-                            : "Set for HOME SCREEN",
-                        style: TextStyle(color: AppColors.white),
-                      ),
-                      value: state.selectedScreens.contains('HOME'),
-                    ),
-                  ),
-                  Container(
-                    margin: edge_insets_t_16,
-                    decoration: BoxDecoration(
-                        color: state.selectedScreens.contains('LOCK')
-                            ? state.isTimerEnabled != false
-                            ? AppColors.grey5
-                            : AppColors.green05
-                            : AppColors.grey5,
-                        borderRadius: borderRadius.br_5,
-                        border: state.selectedScreens.contains('LOCK')
-                            ? borders.b_2px_bgLightBlue
-                            : null),
-                    child: CheckboxListTile(
+                    Container(
+                      margin: edge_insets_t_16,
+                      decoration: BoxDecoration(
+                          color: state.selectedScreens.contains('HOME')
+                              ? state.isTimerEnabled != false
+                              ? AppColors.grey5
+                              : AppColors.green05
+                              : AppColors.grey5,
+                          borderRadius: borderRadius.br_5,
+                          border: state.selectedScreens.contains('HOME')
+                              ? borders.b_2px_bgLightBlue
+                              : null),
+                      child: CheckboxListTile(
                         activeColor: AppColors.bgPrimary2,
-                        side:
-                            BorderSide(color: AppColors.bgLightBlue, width: 2),
-                        value: state.selectedScreens.contains('LOCK'),
+                        side: BorderSide(color: AppColors.bgLightBlue, width: 2),
                         onChanged: state.isTimerEnabled != false
                             ? null
                             : (_) async {
-                                await getCubit(context)
-                                    .setSelectedScreen('LOCK');
-                              },
+                          await getCubit(context).setSelectedScreen('HOME');
+                        },
                         title: Text(
-                          state.selectedScreens.contains('LOCK')
-                              ? "Turn off LOCK SCREEN"
-                              : "Set for LOCK SCREEN",
+                          state.selectedScreens.contains('HOME')
+                              ? "Turn off HOME SCREEN"
+                              : "Set for HOME SCREEN",
                           style: TextStyle(color: AppColors.white),
-                        )),
-                  ),
-                  Container(
-                    height: 100,
-                    margin: edge_insets_t_24,
-                    child: AdsNativeAd(templateType: TemplateType.small),
-                  ),
-                ],
+                        ),
+                        value: state.selectedScreens.contains('HOME'),
+                      ),
+                    ),
+                    Container(
+                      margin: edge_insets_t_16,
+                      decoration: BoxDecoration(
+                          color: state.selectedScreens.contains('LOCK')
+                              ? state.isTimerEnabled != false
+                              ? AppColors.grey5
+                              : AppColors.green05
+                              : AppColors.grey5,
+                          borderRadius: borderRadius.br_5,
+                          border: state.selectedScreens.contains('LOCK')
+                              ? borders.b_2px_bgLightBlue
+                              : null),
+                      child: CheckboxListTile(
+                          activeColor: AppColors.bgPrimary2,
+                          side:
+                          BorderSide(color: AppColors.bgLightBlue, width: 2),
+                          value: state.selectedScreens.contains('LOCK'),
+                          onChanged: state.isTimerEnabled != false
+                              ? null
+                              : (_) async {
+                            await getCubit(context)
+                                .setSelectedScreen('LOCK');
+                          },
+                          title: Text(
+                            state.selectedScreens.contains('LOCK')
+                                ? "Turn off LOCK SCREEN"
+                                : "Set for LOCK SCREEN",
+                            style: TextStyle(color: AppColors.white),
+                          )),
+                    ),
+                    Container(
+                      height: 110,
+                      margin: edge_insets_t_24,
+                      decoration:
+                      BoxDecoration(borderRadius: borderRadius.br_100),
+                      child: Row(
+                        children: [
+                          Expanded(
+                              child: AdsNativeAd(
+                                  templateType: TemplateType.small)),
+                          largeScreen
+                              ? Expanded(
+                              child: AdsNativeAd(
+                                  templateType: TemplateType.small))
+                              : SizedBox.shrink(),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
             floatingActionButton: Container(

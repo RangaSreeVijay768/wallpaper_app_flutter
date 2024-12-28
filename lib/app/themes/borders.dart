@@ -16,6 +16,7 @@ abstract class borderRadius {
   static BorderRadius br_5 = BorderRadius.circular(5);
   static BorderRadius br_10 = BorderRadius.circular(10);
   static BorderRadius br_20 = BorderRadius.circular(20);
+  static BorderRadius br_25 = BorderRadius.circular(25);
   static BorderRadius br_30 = BorderRadius.circular(30);
   static BorderRadius br_100 = BorderRadius.circular(100);
 }

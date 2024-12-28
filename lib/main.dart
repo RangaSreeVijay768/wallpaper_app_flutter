@@ -23,34 +23,6 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-  Future<bool> showExitPopup(BuildContext context) async {
-    return await showDialog<bool>(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("Exit App"),
-          content: const Text("Are you sure you want to exit the app?"),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false), // Close dialog
-              child: const Text("Cancel"),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(true); // Confirm exit
-                Future.delayed(Duration.zero, () {
-                  SystemNavigator.pop(); // Close the app
-                });
-              },
-              child: const Text("OK"),
-            ),
-          ],
-        );
-      },
-    ) ??
-        false;
-  }
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
