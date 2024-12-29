@@ -49,6 +49,9 @@
                 android:name="com.google.android.gms.ads.flag.NATIVE_AD_DEBUGGER_ENABLED"
                 android:value="false">
         </meta-data>
+        <service
+                android:name="id.flutter.flutter_background_service.BackgroundService"
+                android:foregroundServiceType="dataSync" />
 
     </application>
     <!-- Required to query activities that can process text, see:

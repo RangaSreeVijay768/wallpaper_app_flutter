@@ -6,6 +6,7 @@ import 'package:basic/app/wallpaper/screens/wallpapers_auto_set_screen/wallpaper
 import 'package:basic/app/wallpaper/screens/wallpapers_auto_set_screen/wallpapers_auto_set_screen_controller.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -189,17 +190,22 @@ class WallpapersSettingsScreen extends BaseStatelessWidget<
                               ),
                               onPressed: () async {
                                 final prefs = await SharedPreferences.getInstance();
+                                final service = FlutterBackgroundService();
                                 await prefs
                                     .setInt('wallpaper_interval', state.interval)
                                     .then((_) {
-                                  state.isTimerEnabled != false
-                                      ? Future.delayed(Duration(seconds: 1)).then(
-                                          (_) async {
-                                        await wallpapersAutoSetScreenController
-                                            .getChildCubit()
-                                            .initializeBackgroundService();
-                                      })
-                                      : null;
+                                      try{
+                                        service.invoke("stop");
+                                      } finally {
+                                        state.isTimerEnabled != false
+                                            ? Future.delayed(Duration(seconds: 2)).then(
+                                                (_) async {
+                                                  await wallpapersAutoSetScreenController
+                                                      .getChildCubit()
+                                                      .initializeBackgroundService();
+                                            })
+                                            : null;
+                                      }
                                 });
                                 ShowToast.toast(
                                     "Updated the timer to ${prefs.getInt('wallpaper_interval')} minutes",

@@ -5,6 +5,7 @@ import 'package:basic/app/images/widgets/get_all_images/get_all_images_controlle
 import 'package:basic/app/themes/toast.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -90,22 +91,34 @@ class WallpapersAutoSetScreen extends BaseStatelessWidget<
                         onChanged: state.selectedScreens.isEmpty
                             ? null
                             : (value) async {
+                          final service = FlutterBackgroundService();
+
                           if (value) {
                             final hasInternet = await getCubit(context).checkInternetConnection();
                             if (!hasInternet) {
                               ShowToast.toast("No internet connection available.", Colors.redAccent);
                               return;
                             }
-                          }
-                          try {
-                            final prefs = await SharedPreferences.getInstance();
-                            await prefs.setBool('isTimerEnabled', value);
-                            getCubit(context)
-                                .emitState(state.copyWith(isTimerEnabled: value));
-                          } finally {
-                            Future.delayed(Duration(seconds: 1)).then((_) {
-                              getCubit(context).initializeBackgroundService();
-                            });
+                            try {
+                              final prefs = await SharedPreferences.getInstance();
+                              await prefs.setBool('isTimerEnabled', value);
+                              getCubit(context).emitState(state.copyWith(isTimerEnabled: value));
+                            } finally {
+                              // Initialize the background service
+                              Future.delayed(Duration(seconds: 1)).then((_) {
+                                getCubit(context).initializeBackgroundService();
+                              });
+                            }
+                          } else {
+                            try {
+                              final prefs = await SharedPreferences.getInstance();
+                              await prefs.setBool('isTimerEnabled', value);
+                              getCubit(context).emitState(state.copyWith(isTimerEnabled: value));
+                            } finally {
+                              // Stop the background service
+                              service.invoke("stop");
+                              ShowToast.toast('Auto wallpaper service stopped', Colors.redAccent);
+                            }
                           }
                         },
                       ),
@@ -186,7 +199,7 @@ class WallpapersAutoSetScreen extends BaseStatelessWidget<
                               : SizedBox.shrink(),
                         ],
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),

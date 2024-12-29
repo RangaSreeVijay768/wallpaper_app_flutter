@@ -42,15 +42,17 @@ class WallpapersAutoSetScreenCubit
   Future<void> initializeBackgroundService() async {
     final service = FlutterBackgroundService();
 
-    final isRunning = await service.isRunning();
-    if (isRunning) {
-      logger.d("Stopping existing service before reinitialization");
-      try {
-        service.invoke("stop");
-      } finally {
-        logger.d("stopped existing service");
-      }
-    }
+    // final isRunning = await service.isRunning();
+    // if (isRunning) {
+    //   logger.d("Stopping existing service before reinitialization");
+    //   try {
+    //     service.invoke("stop");
+    //   } catch (e) {
+    //     logger.e("Failed to stop the service: $e");
+    //   }finally {
+    //     logger.d("stopped existing service");
+    //   }
+    // }
 
     await service.configure(
       androidConfiguration: AndroidConfiguration(
@@ -64,6 +66,8 @@ class WallpapersAutoSetScreenCubit
         onBackground: null,
       ),
     );
+
+    // service.invoke("stop");
 
     // Start the service
     final started = await service.startService();
@@ -127,14 +131,9 @@ Future<List<String>> getAutoSettingImages() async {
   return prefs.getStringList('autoset') ?? [];
 }
 
-
 @pragma('vm:entry-point')
 void onStart(ServiceInstance service) async {
   logger.d('onstart starting');
-  service.on("stop").listen((event) {
-    service.stopSelf();
-    logger.d("background process is now stopped");
-  });
   if (service is AndroidServiceInstance) {
     service.setForegroundNotificationInfo(
       title: "Wallpaper Service",
@@ -142,59 +141,70 @@ void onStart(ServiceInstance service) async {
     );
   }
 
-  final prefs = await SharedPreferences.getInstance();
-  final interval = prefs.getInt('wallpaper_interval') ?? 30;
-  final isTimerEnabled = prefs.getBool('isTimerEnabled') ?? false;
-  final imagesData = await getAutoSettingImages();
-  final selectedScreens = prefs.getStringList('selectedScreens') ?? <String>[];
+  service.on("stop").listen((event) {
+    service.stopSelf().then((_) {
+      logger.d("Background process is now stopped");
+    }).catchError((e) {
+      logger.e("Error stopping the service: $e");
+    });
+  });
 
-  logger.d(interval);
-  logger.d(isTimerEnabled);
-  logger.d(selectedScreens);
-  logger.d(imagesData);
+  Future(() async {
+    final prefs = await SharedPreferences.getInstance();
+    final interval = prefs.getInt('wallpaper_interval') ?? 30;
+    final isTimerEnabled = prefs.getBool('isTimerEnabled') ?? false;
+    final imagesData = await getAutoSettingImages();
+    final selectedScreens = prefs.getStringList('selectedScreens') ?? <String>[];
 
-  if (isTimerEnabled != false && imagesData.isNotEmpty && selectedScreens.isNotEmpty) {
-    logger.d('timer initialized');
-    ShowToast.toast('Auto wallpaper service initialized', Colors.greenAccent);
-    final initialImageUrl = 'https://drive.google.com/uc?export=view&id=${imagesData[0]}';
-    final initialImageUrlLockScreen = 'https://drive.google.com/uc?export=view&id=${imagesData[1]}';
-    if (selectedScreens.contains('HOME')) {
-      await setWallpaperBackground(initialImageUrl, WallpaperManager.HOME_SCREEN);
-    }
-    if (selectedScreens.contains('LOCK')) {
-      await setWallpaperBackground(initialImageUrlLockScreen, WallpaperManager.LOCK_SCREEN);
-    }
-    int currentIndex = 1;
-    int lockScreenIndex = 2;
-    Timer.periodic(Duration(minutes: interval), (timer) async {
-      ShowToast.toast('Auto setting wallpaper', Colors.greenAccent);
+    logger.d(interval);
+    logger.d(isTimerEnabled);
+    logger.d(selectedScreens);
+    logger.d(imagesData);
 
-      if (currentIndex >= imagesData.length) {
-        currentIndex = 0;
-      }
-      if (currentIndex >= imagesData.length) {
-        lockScreenIndex = 1;
-      }
-      final imageId = imagesData[currentIndex];
-      final lockScreenImageId = imagesData[lockScreenIndex];
-      final imageUrl = 'https://drive.google.com/uc?export=view&id=$imageId';
-      final imageUrlLockScreen = 'https://drive.google.com/uc?export=view&id=$lockScreenImageId';
-      logger.d(imageUrl);
-
+    if (isTimerEnabled != false && imagesData.isNotEmpty && selectedScreens.isNotEmpty) {
+      logger.d('timer initialized');
+      ShowToast.toast('Auto wallpaper service initialized', Colors.greenAccent);
+      final initialImageUrl = 'https://drive.google.com/uc?export=view&id=${imagesData[0]}';
+      final initialImageUrlLockScreen = 'https://drive.google.com/uc?export=view&id=${imagesData[1]}';
       if (selectedScreens.contains('HOME')) {
-        await setWallpaperBackground(imageUrl, WallpaperManager.HOME_SCREEN);
+        await setWallpaperBackground(initialImageUrl, WallpaperManager.HOME_SCREEN);
       }
       if (selectedScreens.contains('LOCK')) {
-        await setWallpaperBackground(imageUrlLockScreen, WallpaperManager.LOCK_SCREEN);
+        await setWallpaperBackground(initialImageUrlLockScreen, WallpaperManager.LOCK_SCREEN);
       }
-      currentIndex++;
-      lockScreenIndex++;
-    });
-    return;
-  } else {
-    logger.d('timer cancelled');
-    ShowToast.toast('Auto wallpaper service stopped', Colors.redAccent);
-  }
+      int currentIndex = 1;
+      int lockScreenIndex = 2;
+      Timer.periodic(Duration(minutes: interval), (timer) async {
+        ShowToast.toast('Auto setting wallpaper', Colors.greenAccent);
+
+        if (currentIndex >= imagesData.length) {
+          currentIndex = 0;
+        }
+        if (currentIndex >= imagesData.length) {
+          lockScreenIndex = 1;
+        }
+        final imageId = imagesData[currentIndex];
+        final lockScreenImageId = imagesData[lockScreenIndex];
+        final imageUrl = 'https://drive.google.com/uc?export=view&id=$imageId';
+        final imageUrlLockScreen = 'https://drive.google.com/uc?export=view&id=$lockScreenImageId';
+        logger.d(imageUrl);
+
+        if (selectedScreens.contains('HOME')) {
+          await setWallpaperBackground(imageUrl, WallpaperManager.HOME_SCREEN);
+        }
+        if (selectedScreens.contains('LOCK')) {
+          await setWallpaperBackground(imageUrlLockScreen, WallpaperManager.LOCK_SCREEN);
+        }
+        currentIndex++;
+        lockScreenIndex++;
+      });
+      return;
+    } else {
+      logger.d('timer cancelled');
+      ShowToast.toast('Auto wallpaper service stopped', Colors.redAccent);
+    }
+  });
+
 }
 
 
