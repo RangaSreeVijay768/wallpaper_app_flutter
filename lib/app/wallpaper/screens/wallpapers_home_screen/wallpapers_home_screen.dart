@@ -2,8 +2,6 @@ import 'package:basic/app/core/database/boolean_status.dart';
 import 'package:basic/app/core/models/image_models.dart';
 import 'package:basic/app/themes/app_colors.dart';
 import 'package:basic/app/wallpaper/widgets/wallpapers_get_all_images/wallpapers_get_all_images.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import '../../../categories/widgets/get_all_categories/get_all_categories_controller.dart';
@@ -85,6 +83,7 @@ class WallpapersHomeScreen extends BaseStatelessWidget<
                                           .getChildCubit()
                                           .createRequestData(),
                                     );
+                                imagesData.shuffle();
                                 imagesData = List.from(imagesData);
                                 getCubit(context).emitState(
                                   state.copyWith(
@@ -127,6 +126,8 @@ class WallpapersHomeScreen extends BaseStatelessWidget<
                     controller: getAllImagesController,
                     onImagesLoaded: (images) {
                       imagesData = images.images!;
+                      imagesData.shuffle();
+                      imagesData = List.from(imagesData);
                       getCubit(context).emitState(
                         state.copyWith(imagesData: images.images),
                       );

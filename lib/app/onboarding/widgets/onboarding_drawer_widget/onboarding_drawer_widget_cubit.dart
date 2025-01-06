@@ -19,9 +19,9 @@ class OnboardingDrawerWidgetCubit
     extends BaseCubit<OnboardingDrawerWidgetState> {
   OnboardingDrawerWidgetCubit({required super.context})
       : super(initialState: OnboardingDrawerWidgetState.initial());
+  static String appId = "com.ranga.wallpaper2k25";
 
   rateApp() async {
-    final String appId = "com.example.wallpaper";
     final Uri rateUri = Uri.parse("https://play.google.com/store/apps/details?id=$appId");
 
     if (await canLaunchUrl(rateUri)) {
@@ -42,6 +42,6 @@ class OnboardingDrawerWidgetCubit
   }
   
   shareApp() async{
-    await Share.shareUri(Uri.parse("www.google.com"));
+    await Share.shareUri(Uri.parse("https://play.google.com/store/apps/details?id=$appId"));
   }
 }
