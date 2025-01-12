@@ -128,7 +128,7 @@ class AutosetRulesModalContent
                             SizedBox(height: 6,),
                             Text(
                               "6. Update Images\n"
-                                  "   You need to restart the app to update images. Everytime you restart the app, images will be updated",
+                                  "   You need to restart the service to update images. Everytime you restart the service, images will be updated",
                               style: TextStyle(
                                 fontSize: Fonts.fontSize14,
                                 color: AppColors.grey3,

@@ -37,6 +37,7 @@ class WallpapersAboutUsScreen extends BaseStatelessWidget<
         },
         builder: (context, state) {
           initializeController(context);
+          final largeScreen = MediaQuery.sizeOf(context).width > 600;
           return Scaffold(
             backgroundColor: AppColors.dark,
             appBar: AppBar(
@@ -51,7 +52,7 @@ class WallpapersAboutUsScreen extends BaseStatelessWidget<
                   backgroundColor: AppColors.grey3,
                 ),
                 onPressed: () {
-                  context.pop();
+                  Navigator.pop(context);
                 },
                 icon: Icon(Icons.arrow_back),
               ),
@@ -174,7 +175,17 @@ class WallpapersAboutUsScreen extends BaseStatelessWidget<
                     ),
                   ),
                   SizedBox(height: 32,),
-                  AdsNativeAd(templateType: TemplateType.medium)
+                  Row(
+                    children: [
+                      Expanded(
+                          child: AdsNativeAd(templateType: TemplateType.medium)
+                      ),
+                      largeScreen?
+                      Expanded(
+                          child: AdsNativeAd(templateType: TemplateType.medium)
+                      ) : SizedBox.shrink()
+                    ],
+                  )
                 ],
               ),
             ),

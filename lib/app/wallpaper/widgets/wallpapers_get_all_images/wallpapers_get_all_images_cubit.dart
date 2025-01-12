@@ -28,14 +28,15 @@ class WallpapersGetAllImagesCubit extends BaseCubit<WallpapersGetAllImagesState>
     final fileIds = imagesData
         .map((image) => image.fileId)
         .whereType<String>()
-        .toList()
-      ..shuffle(random);
+        .toSet()
+        .toList();
 
-    final selectedFileIds = fileIds.take(150).toList();
+    fileIds.shuffle(random);
+
     await prefs.remove('autoset');
 
-    await prefs.setStringList('autoset', selectedFileIds).then((_) {
-      logger.d('New file IDs saved: $selectedFileIds');
+    await prefs.setStringList('autoset', fileIds).then((_) {
+      logger.d('New unique and shuffled file IDs saved: $fileIds');
     });
   }
 }

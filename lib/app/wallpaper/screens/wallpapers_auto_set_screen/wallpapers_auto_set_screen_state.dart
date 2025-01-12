@@ -7,6 +7,7 @@ class WallpapersAutoSetScreenState with _$WallpapersAutoSetScreenState {
     BooleanStatus? imageStatus,
     @Default(5) int timerIntervalMinutes,
     GetAllImagesState? getAllImagesState,
+    int? interval,
     required bool isTimerEnabled,
     required List<String> selectedScreens,
     GetAllImagesResponse? getAllImagesResponse,

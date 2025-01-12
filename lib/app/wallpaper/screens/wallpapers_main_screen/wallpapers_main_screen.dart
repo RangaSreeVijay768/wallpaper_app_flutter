@@ -12,8 +12,19 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import '../../../categories/widgets/get_all_categories/get_all_categories.dart';
+import '../../../categories/widgets/get_all_categories/get_all_categories_controller.dart';
+import '../../../core/database/boolean_status.dart';
+import '../../../core/models/category_models.dart';
+import '../../../core/models/image_models.dart';
+import '../../../core/models/profile_models.dart';
+import '../../../images/widgets/get_all_images/get_all_images.dart';
+import '../../../images/widgets/get_all_images/get_all_images_controller.dart';
+import '../../../profile/widgets/get_all_profile_images/get_all_profile_images.dart';
+import '../../../profile/widgets/get_all_profile_images/get_all_profile_images_controller.dart';
 import '../../../themes/app_colors.dart';
 import '../../../themes/fonts.dart';
+import '../../../themes/loading_indicator.dart';
 import '/app/themes/borders.dart';
 import '/app/themes/edge_insets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -30,6 +41,17 @@ class WallpapersMainScreen extends BaseStatelessWidget<
   WallpapersMainScreen({Key? key, super.controller, super.onStateChanged})
       : super(key: key);
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  GetAllImagesController getAllImagesController = GetAllImagesController();
+  GetAllCategoriesController getAllCategoriesController =
+  GetAllCategoriesController();
+  late List<Images> imagesData = [];
+  late BooleanStatus imageStatus = BooleanStatus.pending;
+  List<PImages> pImagesData = [];
+  BooleanStatus pImageStatus = BooleanStatus.pending;
+  GetAllProfileImagesController getAllProfileImagesController =
+  GetAllProfileImagesController();
+  late List<Categories> categoriesData = [];
+  late BooleanStatus categoriesStatus = BooleanStatus.pending;
 
   Future<bool> showExitPopup(BuildContext context) async {
     return await showDialog<bool>(
@@ -94,12 +116,92 @@ class WallpapersMainScreen extends BaseStatelessWidget<
                   drawer: OnboardingDrawerWidget(),
                   body: Stack(
                     children: [
+                      GetAllImagesNoTemplate(
+                        controller: getAllImagesController,
+                        onImagesLoaded: (images) {
+                          imagesData = images.images!;
+                          imagesData.shuffle();
+                          imagesData = List.from(imagesData);
+                          getCubit(context).emitState(
+                            state.copyWith(imagesData: images.images),
+                          );
+                        },
+                        imagesStatus: (status) {
+                          imageStatus = status;
+                          getCubit(context)
+                              .emitState(state.copyWith(imageStatus: status));
+                        },
+                      ),
+                      GetAllProfileImagesNoTemplate(
+                        controller: getAllProfileImagesController,
+                        onImagesLoaded: (images) {
+                          pImagesData = images.images!;
+                          pImagesData.shuffle();
+                          pImagesData = List.from(pImagesData);
+                          getCubit(context)
+                              .emitState(state.copyWith(pImagesData: images.images));
+                        },
+                        imagesStatus: (status) {
+                          pImageStatus = status;
+                          getCubit(context)
+                              .emitState(state.copyWith(pImageStatus: status));
+                        },
+                      ),
+                      GetAllCategoriesNoTemplate(
+                          controller: getAllCategoriesController,
+                          categoriesStatus: (status) {
+                            categoriesStatus = status;
+                            getCubit(context).emitState(
+                                state.copyWith(getAllCategoriesStatus: status));
+                          },
+                          onCategoriesLoaded: (categories) {
+                            categoriesData = categories.categories!;
+                            getCubit(context).emitState(state.copyWith(
+                                categoriesData: categories.categories!));
+                          }),
                       TabBarView(
                         children: [
                           WallpapersFavouriteScreen(),
-                          WallpapersCategoriesScreen(),
-                          WallpapersHomeScreen(),
-                          WallpapersProfilePicScreen(),
+                          WallpapersCategoriesScreen(
+                            key: ValueKey(categoriesData),
+                            categoriesData: categoriesData,
+                            categoriesStatus: categoriesStatus,
+                            onRefresh: () async{
+                              await getAllCategoriesController
+                                  .getChildCubit()
+                                  .getAllCategories(getAllCategoriesController
+                                  .getChildCubit()
+                                  .createRequestData());
+                            },
+                          ),
+                          WallpapersHomeScreen(
+                            key: ValueKey(imagesData),
+                            imagesData: imagesData,
+                            imageStatus: imageStatus,
+                            onRefresh: () async {
+                              await getAllImagesController
+                                  .getChildCubit()
+                                  .getAllImages(
+                                getAllImagesController
+                                    .getChildCubit()
+                                    .createRequestData(),
+                              );
+                            },
+                          ),
+                          WallpapersProfilePicScreen(
+                            key: ValueKey(pImagesData),
+                            imagesData: pImagesData,
+                            imageStatus: pImageStatus,
+                            onRefresh: () async{
+                              await getAllProfileImagesController
+                                  .getChildCubit()
+                                  .getAllProfileImages(
+                                getAllProfileImagesController
+                                    .getChildCubit()
+                                    .createRequestData(),
+                              );
+                            },
+                          ),
                           WallpapersAutoSetScreen(),
                         ],
                       ),

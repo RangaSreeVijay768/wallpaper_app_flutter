@@ -25,6 +25,8 @@ class WallpapersPrivacyPolicyScreen
 
   @override
   Widget build(BuildContext context) {
+    final largeScreen = MediaQuery.sizeOf(context).width > 600;
+
     return BlocProvider<WallpapersPrivacyPolicyScreenCubit>(
       create: (context) => createCubitAndAssignToController(context),
       child: BlocConsumer<
@@ -50,7 +52,7 @@ class WallpapersPrivacyPolicyScreen
                   backgroundColor: AppColors.grey3,
                 ),
                 onPressed: () {
-                  context.pop();
+                  Navigator.pop(context);
                 },
                 icon: Icon(Icons.arrow_back),
               ),
@@ -183,7 +185,17 @@ class WallpapersPrivacyPolicyScreen
                     style: TextStyle(color: AppColors.grey6, fontSize: 16),
                   ),
                   SizedBox(height: 24,),
-                  AdsNativeAd(templateType: TemplateType.medium)
+                  Row(
+                    children: [
+                      Expanded(
+                          child: AdsNativeAd(templateType: TemplateType.medium)
+                      ),
+                      largeScreen?
+                      Expanded(
+                          child: AdsNativeAd(templateType: TemplateType.medium)
+                      ) : SizedBox.shrink()
+                    ],
+                  )
                 ],
               ),
             ),

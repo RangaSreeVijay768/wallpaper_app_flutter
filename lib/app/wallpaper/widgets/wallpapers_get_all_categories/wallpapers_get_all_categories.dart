@@ -72,15 +72,9 @@ class WallpapersGetAllCategories extends BaseStatelessWidget<
                   final category = categories[index];
                   return InkWell(
                     onTap: () {
-                      showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (context){
-                            return WallpapersImagesCategoriesScreen(
-                                selectedCategory: category
-                            );
-                          }
-                      );
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => WallpapersImagesCategoriesScreen(
+                          selectedCategory: category
+                      )));
                     },
                     child: Card(
                       color: AppColors.dark2,
@@ -98,12 +92,19 @@ class WallpapersGetAllCategories extends BaseStatelessWidget<
                           borderRadius: borderRadius.br_10,
                           // border: borders.b_1px_dark2
                         ),
-                        child: Text(
-                          category.name!,
-                          style: TextStyle(
-                              color: AppColors.grey3,
-                              fontWeight: Fonts.f500,
-                              fontSize: Fonts.fontSize16),
+                        child: Container(
+                          padding: edge_insets_x_10_y_4,
+                          decoration: BoxDecoration(
+                              color: AppColors.bgPrimary08,
+                            borderRadius: borderRadius.br_5
+                          ),
+                          child: Text(
+                            category.name!,
+                            style: TextStyle(
+                                color: AppColors.dark2,
+                                fontWeight: Fonts.f500,
+                                fontSize: Fonts.fontSize18),
+                          ),
                         ),
                       ),
                     ),

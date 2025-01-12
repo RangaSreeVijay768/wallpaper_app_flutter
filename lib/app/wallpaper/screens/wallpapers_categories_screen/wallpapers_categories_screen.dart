@@ -24,13 +24,15 @@ class WallpapersCategoriesScreen extends BaseStatelessWidget<
     WallpapersCategoriesScreenController,
     WallpapersCategoriesScreenCubit,
     WallpapersCategoriesScreenState> {
-  WallpapersCategoriesScreen({Key? key, super.controller, super.onStateChanged})
+  WallpapersCategoriesScreen({Key? key, super.controller, super.onStateChanged, required this.categoriesData, required this.categoriesStatus, required this.onRefresh})
       : super(key: key);
-  late List<Categories> categoriesData = [];
-  late BooleanStatus categoriesStatus = BooleanStatus.pending;
+  List<Categories> categoriesData;
+  BooleanStatus categoriesStatus;
   GetAllCategoriesController getAllCategoriesController =
       GetAllCategoriesController();
+  Future<void> Function() onRefresh;
   final ValueNotifier<bool> isRefreshing = ValueNotifier(false);
+  ValueNotifier<int> rebuildNotifier = ValueNotifier(0);
 
   @override
   Widget build(BuildContext context) {
@@ -61,15 +63,12 @@ class WallpapersCategoriesScreen extends BaseStatelessWidget<
                           : () async {
                               try {
                                 isRefreshing.value = true;
-                                await getAllCategoriesController
-                                    .getChildCubit()
-                                    .getAllCategories(getAllCategoriesController
-                                        .getChildCubit()
-                                        .createRequestData());
-                                categoriesData = List.from(categoriesData);
+                                await onRefresh.call();
                                 getCubit(context).emitState(state.copyWith(
                                     categoriesData: List.from(categoriesData)));
+                                categoriesData = List.from(categoriesData);
                               } finally {
+                                rebuildNotifier.value++;
                                 isRefreshing.value = false;
                               }
                             },
@@ -100,18 +99,18 @@ class WallpapersCategoriesScreen extends BaseStatelessWidget<
               // padding: edge_insets_x_10,
               child: Column(
                 children: [
-                  GetAllCategoriesNoTemplate(
-                      controller: getAllCategoriesController,
-                      categoriesStatus: (status) {
-                        categoriesStatus = status;
-                        getCubit(context).emitState(
-                            state.copyWith(getAllCategoriesStatus: status));
-                      },
-                      onCategoriesLoaded: (categories) {
-                        categoriesData = categories.categories!;
-                        getCubit(context).emitState(state.copyWith(
-                            categoriesData: categories.categories!));
-                      }),
+                  // GetAllCategoriesNoTemplate(
+                  //     controller: getAllCategoriesController,
+                  //     categoriesStatus: (status) {
+                  //       categoriesStatus = status;
+                  //       getCubit(context).emitState(
+                  //           state.copyWith(getAllCategoriesStatus: status));
+                  //     },
+                  //     onCategoriesLoaded: (categories) {
+                  //       categoriesData = categories.categories!;
+                  //       getCubit(context).emitState(state.copyWith(
+                  //           categoriesData: categories.categories!));
+                  //     }),
                   Expanded(
                       child: categoriesData.isNotEmpty
                           ? WallpapersGetAllCategories(

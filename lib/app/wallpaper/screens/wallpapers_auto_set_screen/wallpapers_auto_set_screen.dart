@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:basic/app/ads/widgets/ads_native_ad/ads_native_ad.dart';
 import 'package:basic/app/core/logger/log.dart';
 import 'package:basic/app/images/widgets/get_all_images/get_all_images_controller.dart';
+import 'package:basic/app/themes/fonts.dart';
 import 'package:basic/app/themes/toast.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/widgets.dart';
@@ -63,10 +64,7 @@ class WallpapersAutoSetScreen extends BaseStatelessWidget<
             ),
             appBarActionButton: IconButton(
                 onPressed: (){
-                  showDialog(
-                      context: context,
-                      builder: (context) => WallpapersSettingsScreen()
-                  );
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => WallpapersSettingsScreen()));
                 },
                 icon: Icon(Icons.settings)
             ),
@@ -181,6 +179,29 @@ class WallpapersAutoSetScreen extends BaseStatelessWidget<
                                 : "Set for LOCK SCREEN",
                             style: TextStyle(color: AppColors.white),
                           )),
+                    ),
+                    state.isTimerEnabled == false?
+                    Container(
+                      margin: edge_insets_t_8,
+                      child: Text("Changing Wallpaper automatically for every",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                        color: AppColors.grey3
+                      ),),
+                    ) : SizedBox(),
+                    Container(
+                      key: ValueKey(state.interval),
+                      child: Text(
+                        state.interval! > 60
+                            ? "${state.interval! ~/ 60} hrs ${state.interval! % 60} min" // Calculate hours and minutes
+                            : "${state.interval} minutes", // Show minutes directly if <= 60
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: AppColors.grey3,
+                          fontSize: Fonts.fontSize18,
+                          fontWeight: Fonts.f500,
+                        ),
+                      ),
                     ),
                     Container(
                       height: 110,

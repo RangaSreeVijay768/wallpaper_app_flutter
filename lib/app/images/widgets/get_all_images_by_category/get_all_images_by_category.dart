@@ -92,6 +92,9 @@ class GetAllImagesByCategory
             );
           }
 
+          if (state.getAllImagesByCategoryResponse != null) {
+            state.getAllImagesByCategoryResponse!.images?.shuffle();
+          }
           return state.getAllImagesByCategoryResponse != null
               ? Container(
             child: GridView.builder(
@@ -103,7 +106,7 @@ class GetAllImagesByCategory
                 childAspectRatio: 1,
               ),
               itemCount: state.getAllImagesByCategoryResponse!.images!.length +
-                  (state.getAllImagesByCategoryResponse!.images!.length ~/ 9), // Add extra count for ads
+                  (state.getAllImagesByCategoryResponse!.images!.length ~/ 9),
               itemBuilder: (context, index) {
                 double gridItemWidth = largeScreen ? (MediaQuery.of(context).size.width * 0.32) : (MediaQuery.of(context).size.width * 0.48);
                 double gridItemHeight = gridItemWidth * (largeScreen ? 1.2 : 1.15);

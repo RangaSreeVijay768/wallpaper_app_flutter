@@ -29,10 +29,17 @@ class WallpapersProfilePicScreen extends BaseStatelessWidget<
     WallpapersProfilePicScreenController,
     WallpapersProfilePicScreenCubit,
     WallpapersProfilePicScreenState> {
-  WallpapersProfilePicScreen({Key? key, super.controller, super.onStateChanged})
+  WallpapersProfilePicScreen(
+      {Key? key,
+      super.controller,
+      super.onStateChanged,
+      required this.imagesData,
+      required this.imageStatus,
+      required this.onRefresh})
       : super(key: key);
-  List<PImages> imagesData = [];
-  BooleanStatus imageStatus = BooleanStatus.pending;
+  List<PImages> imagesData;
+  BooleanStatus imageStatus;
+  Future<void> Function() onRefresh;
   GetAllProfileImagesController getAllProfileImagesController =
       GetAllProfileImagesController();
   final ValueNotifier<bool> isRefreshing = ValueNotifier(false);
@@ -62,18 +69,11 @@ class WallpapersProfilePicScreen extends BaseStatelessWidget<
                   builder: (context, loading, _) {
                     return IconButton(
                       onPressed: loading
-                          ? null // Disable button while refreshing
+                          ? null
                           : () async {
+                              isRefreshing.value = true;
                               try {
-                                isRefreshing.value =
-                                    true; // Start loading animation
-                                await getAllProfileImagesController
-                                    .getChildCubit()
-                                    .getAllProfileImages(
-                                      getAllProfileImagesController
-                                          .getChildCubit()
-                                          .createRequestData(),
-                                    );
+                                await onRefresh.call();
                                 imagesData = List.from(imagesData);
                                 getCubit(context).emitState(
                                   state.copyWith(
@@ -112,20 +112,20 @@ class WallpapersProfilePicScreen extends BaseStatelessWidget<
               padding: edge_insets_x_8,
               child: Column(
                 children: [
-                  GetAllProfileImagesNoTemplate(
-                    controller: getAllProfileImagesController,
-                    onImagesLoaded: (images) {
-                      imagesData = images.images!;
-                      getCubit(context)
-                          .emitState(state.copyWith(imagesData: images.images));
-                      logger.d(imagesData);
-                    },
-                    imagesStatus: (status) {
-                      imageStatus = status;
-                      getCubit(context)
-                          .emitState(state.copyWith(imageStatus: status));
-                    },
-                  ),
+                  // GetAllProfileImagesNoTemplate(
+                  //   controller: getAllProfileImagesController,
+                  //   onImagesLoaded: (images) {
+                  //     imagesData = images.images!;
+                  //     getCubit(context)
+                  //         .emitState(state.copyWith(imagesData: images.images));
+                  //     logger.d(imagesData);
+                  //   },
+                  //   imagesStatus: (status) {
+                  //     imageStatus = status;
+                  //     getCubit(context)
+                  //         .emitState(state.copyWith(imageStatus: status));
+                  //   },
+                  // ),
                   Expanded(
                       child: imagesData.isNotEmpty
                           ? WallpapersGetAllImagesProfilePic(

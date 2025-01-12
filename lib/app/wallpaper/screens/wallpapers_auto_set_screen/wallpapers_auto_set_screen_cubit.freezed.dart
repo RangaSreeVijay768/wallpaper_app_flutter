@@ -21,6 +21,7 @@ mixin _$WallpapersAutoSetScreenState {
   int get timerIntervalMinutes => throw _privateConstructorUsedError;
   GetAllImagesState? get getAllImagesState =>
       throw _privateConstructorUsedError;
+  int? get interval => throw _privateConstructorUsedError;
   bool get isTimerEnabled => throw _privateConstructorUsedError;
   List<String> get selectedScreens => throw _privateConstructorUsedError;
   GetAllImagesResponse? get getAllImagesResponse =>
@@ -33,6 +34,7 @@ mixin _$WallpapersAutoSetScreenState {
             BooleanStatus? imageStatus,
             int timerIntervalMinutes,
             GetAllImagesState? getAllImagesState,
+            int? interval,
             bool isTimerEnabled,
             List<String> selectedScreens,
             GetAllImagesResponse? getAllImagesResponse,
@@ -47,6 +49,7 @@ mixin _$WallpapersAutoSetScreenState {
             BooleanStatus? imageStatus,
             int timerIntervalMinutes,
             GetAllImagesState? getAllImagesState,
+            int? interval,
             bool isTimerEnabled,
             List<String> selectedScreens,
             GetAllImagesResponse? getAllImagesResponse,
@@ -61,6 +64,7 @@ mixin _$WallpapersAutoSetScreenState {
             BooleanStatus? imageStatus,
             int timerIntervalMinutes,
             GetAllImagesState? getAllImagesState,
+            int? interval,
             bool isTimerEnabled,
             List<String> selectedScreens,
             GetAllImagesResponse? getAllImagesResponse,
@@ -106,6 +110,7 @@ abstract class $WallpapersAutoSetScreenStateCopyWith<$Res> {
       BooleanStatus? imageStatus,
       int timerIntervalMinutes,
       GetAllImagesState? getAllImagesState,
+      int? interval,
       bool isTimerEnabled,
       List<String> selectedScreens,
       GetAllImagesResponse? getAllImagesResponse,
@@ -134,6 +139,7 @@ class _$WallpapersAutoSetScreenStateCopyWithImpl<$Res,
     Object? imageStatus = freezed,
     Object? timerIntervalMinutes = null,
     Object? getAllImagesState = freezed,
+    Object? interval = freezed,
     Object? isTimerEnabled = null,
     Object? selectedScreens = null,
     Object? getAllImagesResponse = freezed,
@@ -156,6 +162,10 @@ class _$WallpapersAutoSetScreenStateCopyWithImpl<$Res,
           ? _value.getAllImagesState
           : getAllImagesState // ignore: cast_nullable_to_non_nullable
               as GetAllImagesState?,
+      interval: freezed == interval
+          ? _value.interval
+          : interval // ignore: cast_nullable_to_non_nullable
+              as int?,
       isTimerEnabled: null == isTimerEnabled
           ? _value.isTimerEnabled
           : isTimerEnabled // ignore: cast_nullable_to_non_nullable
@@ -203,6 +213,7 @@ abstract class _$$InitialImplCopyWith<$Res>
       BooleanStatus? imageStatus,
       int timerIntervalMinutes,
       GetAllImagesState? getAllImagesState,
+      int? interval,
       bool isTimerEnabled,
       List<String> selectedScreens,
       GetAllImagesResponse? getAllImagesResponse,
@@ -229,6 +240,7 @@ class __$$InitialImplCopyWithImpl<$Res>
     Object? imageStatus = freezed,
     Object? timerIntervalMinutes = null,
     Object? getAllImagesState = freezed,
+    Object? interval = freezed,
     Object? isTimerEnabled = null,
     Object? selectedScreens = null,
     Object? getAllImagesResponse = freezed,
@@ -251,6 +263,10 @@ class __$$InitialImplCopyWithImpl<$Res>
           ? _value.getAllImagesState
           : getAllImagesState // ignore: cast_nullable_to_non_nullable
               as GetAllImagesState?,
+      interval: freezed == interval
+          ? _value.interval
+          : interval // ignore: cast_nullable_to_non_nullable
+              as int?,
       isTimerEnabled: null == isTimerEnabled
           ? _value.isTimerEnabled
           : isTimerEnabled // ignore: cast_nullable_to_non_nullable
@@ -279,6 +295,7 @@ class _$InitialImpl implements _Initial {
       this.imageStatus,
       this.timerIntervalMinutes = 5,
       this.getAllImagesState,
+      this.interval,
       required this.isTimerEnabled,
       required final List<String> selectedScreens,
       this.getAllImagesResponse,
@@ -304,6 +321,8 @@ class _$InitialImpl implements _Initial {
   @override
   final GetAllImagesState? getAllImagesState;
   @override
+  final int? interval;
+  @override
   final bool isTimerEnabled;
   final List<String> _selectedScreens;
   @override
@@ -321,7 +340,7 @@ class _$InitialImpl implements _Initial {
 
   @override
   String toString() {
-    return 'WallpapersAutoSetScreenState.initial(imagesData: $imagesData, imageStatus: $imageStatus, timerIntervalMinutes: $timerIntervalMinutes, getAllImagesState: $getAllImagesState, isTimerEnabled: $isTimerEnabled, selectedScreens: $selectedScreens, getAllImagesResponse: $getAllImagesResponse, getAllImagesStatus: $getAllImagesStatus)';
+    return 'WallpapersAutoSetScreenState.initial(imagesData: $imagesData, imageStatus: $imageStatus, timerIntervalMinutes: $timerIntervalMinutes, getAllImagesState: $getAllImagesState, interval: $interval, isTimerEnabled: $isTimerEnabled, selectedScreens: $selectedScreens, getAllImagesResponse: $getAllImagesResponse, getAllImagesStatus: $getAllImagesStatus)';
   }
 
   @override
@@ -337,6 +356,8 @@ class _$InitialImpl implements _Initial {
                 other.timerIntervalMinutes == timerIntervalMinutes) &&
             (identical(other.getAllImagesState, getAllImagesState) ||
                 other.getAllImagesState == getAllImagesState) &&
+            (identical(other.interval, interval) ||
+                other.interval == interval) &&
             (identical(other.isTimerEnabled, isTimerEnabled) ||
                 other.isTimerEnabled == isTimerEnabled) &&
             const DeepCollectionEquality()
@@ -354,6 +375,7 @@ class _$InitialImpl implements _Initial {
       imageStatus,
       timerIntervalMinutes,
       getAllImagesState,
+      interval,
       isTimerEnabled,
       const DeepCollectionEquality().hash(_selectedScreens),
       getAllImagesResponse,
@@ -375,6 +397,7 @@ class _$InitialImpl implements _Initial {
             BooleanStatus? imageStatus,
             int timerIntervalMinutes,
             GetAllImagesState? getAllImagesState,
+            int? interval,
             bool isTimerEnabled,
             List<String> selectedScreens,
             GetAllImagesResponse? getAllImagesResponse,
@@ -386,6 +409,7 @@ class _$InitialImpl implements _Initial {
         imageStatus,
         timerIntervalMinutes,
         getAllImagesState,
+        interval,
         isTimerEnabled,
         selectedScreens,
         getAllImagesResponse,
@@ -400,6 +424,7 @@ class _$InitialImpl implements _Initial {
             BooleanStatus? imageStatus,
             int timerIntervalMinutes,
             GetAllImagesState? getAllImagesState,
+            int? interval,
             bool isTimerEnabled,
             List<String> selectedScreens,
             GetAllImagesResponse? getAllImagesResponse,
@@ -411,6 +436,7 @@ class _$InitialImpl implements _Initial {
         imageStatus,
         timerIntervalMinutes,
         getAllImagesState,
+        interval,
         isTimerEnabled,
         selectedScreens,
         getAllImagesResponse,
@@ -425,6 +451,7 @@ class _$InitialImpl implements _Initial {
             BooleanStatus? imageStatus,
             int timerIntervalMinutes,
             GetAllImagesState? getAllImagesState,
+            int? interval,
             bool isTimerEnabled,
             List<String> selectedScreens,
             GetAllImagesResponse? getAllImagesResponse,
@@ -438,6 +465,7 @@ class _$InitialImpl implements _Initial {
           imageStatus,
           timerIntervalMinutes,
           getAllImagesState,
+          interval,
           isTimerEnabled,
           selectedScreens,
           getAllImagesResponse,
@@ -481,6 +509,7 @@ abstract class _Initial implements WallpapersAutoSetScreenState {
       final BooleanStatus? imageStatus,
       final int timerIntervalMinutes,
       final GetAllImagesState? getAllImagesState,
+      final int? interval,
       required final bool isTimerEnabled,
       required final List<String> selectedScreens,
       final GetAllImagesResponse? getAllImagesResponse,
@@ -494,6 +523,8 @@ abstract class _Initial implements WallpapersAutoSetScreenState {
   int get timerIntervalMinutes;
   @override
   GetAllImagesState? get getAllImagesState;
+  @override
+  int? get interval;
   @override
   bool get isTimerEnabled;
   @override

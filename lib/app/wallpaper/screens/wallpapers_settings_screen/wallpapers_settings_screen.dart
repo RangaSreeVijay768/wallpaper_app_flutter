@@ -34,6 +34,8 @@ class WallpapersSettingsScreen extends BaseStatelessWidget<
 
   @override
   Widget build(BuildContext context) {
+    final largeScreen = MediaQuery.sizeOf(context).width > 600;
+
     return BlocProvider<WallpapersSettingsScreenCubit>(
       create: (context) => createCubitAndAssignToController(context),
       child: BlocConsumer<WallpapersSettingsScreenCubit,
@@ -56,7 +58,7 @@ class WallpapersSettingsScreen extends BaseStatelessWidget<
                   backgroundColor: AppColors.grey3,
                 ),
                 onPressed: () {
-                  context.pop();
+                  Navigator.pop(context);
                 },
                 icon: Icon(Icons.arrow_back),
               ),
@@ -101,17 +103,12 @@ class WallpapersSettingsScreen extends BaseStatelessWidget<
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                '${state.isMinutesUnit ? state.interval : (state.interval / 60).toStringAsFixed(1)}',
-                                style: TextStyle(
-                                    color: AppColors.grey3,
-                                    fontSize: Fonts.fontSize24),
-                              ),
-                              SizedBox(width: 6),
-                              Text(
-                                state.isMinutesUnit ? "minutes" : "hours",
+                                state.interval >= 60
+                                    ? '${state.interval ~/ 60} hrs ${state.interval % 60} min' // Calculate hours and minutes
+                                    : '${state.interval} minutes', // Display minutes directly
                                 style: TextStyle(
                                   color: AppColors.grey3,
-                                  fontSize: Fonts.fontSize16,
+                                  fontSize: Fonts.fontSize24,
                                 ),
                               ),
                             ],
@@ -207,6 +204,7 @@ class WallpapersSettingsScreen extends BaseStatelessWidget<
                                             : null;
                                       }
                                 });
+                                await wallpapersAutoSetScreenController.getChildCubit().loadSwitchState();
                                 ShowToast.toast(
                                     "Updated the timer to ${prefs.getInt('wallpaper_interval')} minutes",
                                     Colors.greenAccent);
@@ -226,7 +224,17 @@ class WallpapersSettingsScreen extends BaseStatelessWidget<
                   ),
                   Container(
                     alignment: Alignment.bottomCenter,
-                    child: AdsNativeAd(templateType: TemplateType.medium),
+                    child: Row(
+                      children: [
+                        Expanded(
+                            child: AdsNativeAd(templateType: TemplateType.medium)
+                        ),
+                        largeScreen?
+                        Expanded(
+                            child: AdsNativeAd(templateType: TemplateType.medium)
+                        ) : SizedBox.shrink()
+                      ],
+                    )
                   ),
                 ],
               ),

@@ -13,10 +13,10 @@ class WallpapersSettingsScreenCubit
     extends BaseCubit<WallpapersSettingsScreenState> {
   WallpapersSettingsScreenCubit({required super.context})
       : super(initialState: WallpapersSettingsScreenState.initial(isTimerEnabled: false, interval: 30, isMinutesUnit: true)){
-    _loadSwitchState();
+    loadSwitchState();
   }
 
-  Future<void> _loadSwitchState() async {
+  Future<void> loadSwitchState() async {
     final prefs = await SharedPreferences.getInstance();
     final isTimerEnabled = prefs.getBool('isTimerEnabled') ?? false;
     final interval = prefs.getInt('wallpaper_interval') ?? 30;

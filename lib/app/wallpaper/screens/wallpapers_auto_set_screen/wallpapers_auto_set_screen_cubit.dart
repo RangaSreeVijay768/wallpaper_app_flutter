@@ -34,7 +34,7 @@ class WallpapersAutoSetScreenCubit
   WallpapersAutoSetScreenCubit({required super.context})
       : super(
             initialState: WallpapersAutoSetScreenState.initial(
-                selectedScreens: [], isTimerEnabled: false)) {
+                selectedScreens: [], isTimerEnabled: false, interval: 30)) {
     loadSwitchState();
     saveScreenDimensions();
   }
@@ -100,8 +100,9 @@ class WallpapersAutoSetScreenCubit
     final isTimerEnabled = prefs.getBool('isTimerEnabled') ?? false;
     final selectedScreens =
         prefs.getStringList('selectedScreens') ?? <String>[];
+    final interval = prefs.getInt('wallpaper_interval') ?? 30;
     emitState(state.copyWith(
-        isTimerEnabled: isTimerEnabled, selectedScreens: selectedScreens));
+        isTimerEnabled: isTimerEnabled, selectedScreens: selectedScreens, interval: interval));
   }
 
   Future<void> setSelectedScreen(String screen) async {
@@ -128,7 +129,9 @@ class WallpapersAutoSetScreenCubit
 
 Future<List<String>> getAutoSettingImages() async {
   final prefs = await SharedPreferences.getInstance();
-  return prefs.getStringList('autoset') ?? [];
+  final List<String> images = prefs.getStringList('autoset') ?? [];
+  images.shuffle(Random());
+  return images;
 }
 
 @pragma('vm:entry-point')

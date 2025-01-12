@@ -62,7 +62,6 @@ class WallpapersViewScreen
                 controller: pageController,
                 itemCount: images.length,
                 itemBuilder: (context, index) {
-                  // Generate the correct image URL for the current page
                   final currentImage = images[index];
                   final imageUrl =
                       'https://drive.google.com/uc?export=view&id=${currentImage.fileId}';

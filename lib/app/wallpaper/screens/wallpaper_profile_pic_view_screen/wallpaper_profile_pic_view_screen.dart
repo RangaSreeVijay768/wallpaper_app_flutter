@@ -132,7 +132,7 @@ class WallpaperProfilePicViewScreen
                                             backgroundColor: AppColors.white,
                                           ),
                                           onPressed: () {
-                                            context.pop();
+                                            Navigator.pop(context);
                                           },
                                           icon: Icon(Icons.arrow_back, size: 25,),
                                         ),

@@ -24,6 +24,8 @@ class WallpapersDisclaimerScreen extends BaseStatelessWidget<
 
   @override
   Widget build(BuildContext context) {
+    final largeScreen = MediaQuery.sizeOf(context).width > 600;
+
     return BlocProvider<WallpapersDisclaimerScreenCubit>(
       create: (context) => createCubitAndAssignToController(context),
       child: BlocConsumer<WallpapersDisclaimerScreenCubit,
@@ -50,7 +52,7 @@ class WallpapersDisclaimerScreen extends BaseStatelessWidget<
                   backgroundColor: AppColors.grey3,
                 ),
                 onPressed: () {
-                  context.pop();
+                  Navigator.pop(context);
                 },
                 icon: Icon(Icons.arrow_back),
               ),
@@ -122,7 +124,17 @@ class WallpapersDisclaimerScreen extends BaseStatelessWidget<
                   SizedBox(
                     height: 24,
                   ),
-                  AdsNativeAd(templateType: TemplateType.medium)
+                  Row(
+                    children: [
+                      Expanded(
+                          child: AdsNativeAd(templateType: TemplateType.medium)
+                      ),
+                      largeScreen?
+                      Expanded(
+                          child: AdsNativeAd(templateType: TemplateType.medium)
+                      ) : SizedBox.shrink()
+                    ],
+                  )
                 ],
               ),
             ),

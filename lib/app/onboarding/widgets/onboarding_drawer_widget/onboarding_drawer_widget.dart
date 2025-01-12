@@ -170,10 +170,7 @@ class OnboardingDrawerWidget extends BaseStatelessWidget<
                                     child: TextButton(
                                   style: Buttons.sideMenuButton,
                                   onPressed: () {
-                                    showDialog(
-                                        context: context,
-                                        builder: (context) => WallpapersSettingsScreen()
-                                    );
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => WallpapersSettingsScreen()));
                                   },
                                   child: const Row(
                                     children: [
@@ -346,10 +343,7 @@ class OnboardingDrawerWidget extends BaseStatelessWidget<
                                     child: TextButton(
                                       style: Buttons.sideMenuButton,
                                       onPressed: () {
-                                        showDialog(
-                                            context: context,
-                                            builder: (context) => WallpapersAboutUsScreen()
-                                        );
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => WallpapersAboutUsScreen()));
                                       },
                                       child: const Row(
                                         children: [
@@ -389,10 +383,7 @@ class OnboardingDrawerWidget extends BaseStatelessWidget<
                                     child: TextButton(
                                       style: Buttons.sideMenuButton,
                                       onPressed: () {
-                                        showDialog(
-                                            context: context,
-                                            builder: (context) => WallpapersDisclaimerScreen()
-                                        );
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => WallpapersDisclaimerScreen()));
                                       },
                                       child: const Row(
                                         mainAxisAlignment: MainAxisAlignment.center,
@@ -412,10 +403,7 @@ class OnboardingDrawerWidget extends BaseStatelessWidget<
                                     child: TextButton(
                                       style: Buttons.sideMenuButton,
                                       onPressed: () {
-                                        showDialog(
-                                            context: context,
-                                            builder: (context) => WallpapersPrivacyPolicyScreen()
-                                        );
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => WallpapersPrivacyPolicyScreen()));
                                       },
                                       child: const Row(
                                         mainAxisAlignment: MainAxisAlignment.center,

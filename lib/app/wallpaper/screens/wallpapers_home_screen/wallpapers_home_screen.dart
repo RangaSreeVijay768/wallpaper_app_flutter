@@ -25,15 +25,19 @@ class WallpapersHomeScreen extends BaseStatelessWidget<
     WallpapersHomeScreenController,
     WallpapersHomeScreenCubit,
     WallpapersHomeScreenState> {
-  WallpapersHomeScreen({Key? key, super.controller, super.onStateChanged})
+  List<Images> imagesData;
+  BooleanStatus imageStatus;
+  Future<void> Function() onRefresh;
+
+  WallpapersHomeScreen({Key? key, super.controller, super.onStateChanged, required this.imagesData, required this.imageStatus, required this.onRefresh})
       : super(key: key);
 
   GetAllImagesController getAllImagesController = GetAllImagesController();
   GetAllCategoriesController getAllCategoriesController =
       GetAllCategoriesController();
   late List<Categories> categoriesData = [];
-  late List<Images> imagesData = [];
-  late BooleanStatus imageStatus = BooleanStatus.pending;
+  // late List<Images> imagesData = [];
+  // late BooleanStatus imageStatus = BooleanStatus.pending;
   final ValueNotifier<bool> isRefreshing = ValueNotifier(false);
   final localImages = [
     'images/image1.jpg',
@@ -76,13 +80,7 @@ class WallpapersHomeScreen extends BaseStatelessWidget<
                           : () async {
                               try {
                                 isRefreshing.value = true;
-                                await getAllImagesController
-                                    .getChildCubit()
-                                    .getAllImages(
-                                      getAllImagesController
-                                          .getChildCubit()
-                                          .createRequestData(),
-                                    );
+                                await onRefresh.call();
                                 imagesData.shuffle();
                                 imagesData = List.from(imagesData);
                                 getCubit(context).emitState(
@@ -122,22 +120,22 @@ class WallpapersHomeScreen extends BaseStatelessWidget<
               padding: edge_insets_x_8,
               child: Column(
                 children: [
-                  GetAllImagesNoTemplate(
-                    controller: getAllImagesController,
-                    onImagesLoaded: (images) {
-                      imagesData = images.images!;
-                      imagesData.shuffle();
-                      imagesData = List.from(imagesData);
-                      getCubit(context).emitState(
-                        state.copyWith(imagesData: images.images),
-                      );
-                    },
-                    imagesStatus: (status) {
-                      imageStatus = status;
-                      getCubit(context)
-                          .emitState(state.copyWith(imageStatus: status));
-                    },
-                  ),
+                  // GetAllImagesNoTemplate(
+                  //   controller: getAllImagesController,
+                  //   onImagesLoaded: (images) {
+                  //     imagesData = images.images!;
+                  //     imagesData.shuffle();
+                  //     imagesData = List.from(imagesData);
+                  //     getCubit(context).emitState(
+                  //       state.copyWith(imagesData: images.images),
+                  //     );
+                  //   },
+                  //   imagesStatus: (status) {
+                  //     imageStatus = status;
+                  //     getCubit(context)
+                  //         .emitState(state.copyWith(imageStatus: status));
+                  //   },
+                  // ),
                   Expanded(
                     child: imagesData.isNotEmpty
                         ? WallpapersGetAllImages(
