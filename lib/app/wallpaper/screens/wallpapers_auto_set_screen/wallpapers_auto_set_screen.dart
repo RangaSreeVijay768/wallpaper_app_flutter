@@ -180,7 +180,7 @@ class WallpapersAutoSetScreen extends BaseStatelessWidget<
                             style: TextStyle(color: AppColors.white),
                           )),
                     ),
-                    state.isTimerEnabled == false?
+                    state.isTimerEnabled != false?
                     Container(
                       margin: edge_insets_t_8,
                       child: Text("Changing Wallpaper automatically for every",
@@ -189,6 +189,7 @@ class WallpapersAutoSetScreen extends BaseStatelessWidget<
                         color: AppColors.grey3
                       ),),
                     ) : SizedBox(),
+                    state.isTimerEnabled != false?
                     Container(
                       key: ValueKey(state.interval),
                       child: Text(
@@ -202,7 +203,7 @@ class WallpapersAutoSetScreen extends BaseStatelessWidget<
                           fontWeight: Fonts.f500,
                         ),
                       ),
-                    ),
+                    ) : SizedBox(),
                     Container(
                       height: 110,
                       margin: edge_insets_t_24,
