@@ -248,7 +248,7 @@ class WallpapersGetAllImages extends BaseStatelessWidget<
   WallpapersGetAllImagesCubit createCubitAndAssignToController(
       BuildContext context) {
     WallpapersGetAllImagesCubit cubit =
-        WallpapersGetAllImagesCubit(context: context, imagesData: imagesData);
+        WallpapersGetAllImagesCubit(context: context, imagesData: imagesData.where((image) => image.category == '674877e1d6980fffe17f08e2').toList());
     controller?.cubit = cubit;
     controller?.childContext = context;
     return cubit;
