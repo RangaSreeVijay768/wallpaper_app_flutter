@@ -29,7 +29,7 @@ class WallpapersHomeScreen extends BaseStatelessWidget<
   BooleanStatus imageStatus;
   Future<void> Function() onRefresh;
 
-  WallpapersHomeScreen({Key? key, super.controller, super.onStateChanged, required this.imagesData, required this.imageStatus, required this.onRefresh})
+  WallpapersHomeScreen({Key? key, PageStorageKey? pageStorageKey, super.controller, super.onStateChanged, required this.imagesData, required this.imageStatus, required this.onRefresh})
       : super(key: key);
 
   GetAllImagesController getAllImagesController = GetAllImagesController();

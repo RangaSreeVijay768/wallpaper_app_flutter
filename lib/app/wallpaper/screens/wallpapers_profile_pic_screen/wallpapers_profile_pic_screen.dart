@@ -30,7 +30,7 @@ class WallpapersProfilePicScreen extends BaseStatelessWidget<
     WallpapersProfilePicScreenCubit,
     WallpapersProfilePicScreenState> {
   WallpapersProfilePicScreen(
-      {Key? key,
+      {Key? key, PageStorageKey? pageStorageKey,
       super.controller,
       super.onStateChanged,
       required this.imagesData,

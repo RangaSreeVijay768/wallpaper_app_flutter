@@ -25,6 +25,7 @@ import 'package:image/image.dart' as img;
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
+import 'package:in_app_update/in_app_update.dart';
 
 part 'wallpapers_main_screen_state.dart';
 part 'wallpapers_main_screen_cubit.freezed.dart';
@@ -34,10 +35,23 @@ class WallpapersMainScreenCubit extends BaseCubit<WallpapersMainScreenState> {
   WallpapersMainScreenCubit({required super.context})
       : super(
     initialState: WallpapersMainScreenState.initial(selectedWidgetName: "HOME",),
-  );
+  ){
+    checkForUpdates();
+  }
 
   selectWidget(String value) {
     emit(state.copyWith(selectedWidgetName: value));
+  }
+
+  Future<void> checkForUpdates() async {
+    try {
+      final AppUpdateInfo updateInfo = await InAppUpdate.checkForUpdate();
+      if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
+        await InAppUpdate.performImmediateUpdate();
+      }
+    } catch (e) {
+      debugPrint("Error checking for updates: $e");
+    }
   }
 
 

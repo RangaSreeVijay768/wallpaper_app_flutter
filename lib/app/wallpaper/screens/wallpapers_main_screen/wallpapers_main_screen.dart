@@ -161,9 +161,10 @@ class WallpapersMainScreen extends BaseStatelessWidget<
                           }),
                       TabBarView(
                         children: [
-                          WallpapersFavouriteScreen(),
+                          WallpapersFavouriteScreen(key: PageStorageKey('favouritesTab')),
                           WallpapersCategoriesScreen(
                             key: ValueKey(categoriesData),
+                            pageStorageKey: const PageStorageKey('categoriesTab'),
                             categoriesData: categoriesData,
                             categoriesStatus: categoriesStatus,
                             onRefresh: () async{
@@ -176,6 +177,7 @@ class WallpapersMainScreen extends BaseStatelessWidget<
                           ),
                           WallpapersHomeScreen(
                             key: ValueKey(imagesData),
+                            pageStorageKey: const PageStorageKey('homeTab'),
                             imagesData: imagesData,
                             imageStatus: imageStatus,
                             onRefresh: () async {
@@ -190,6 +192,7 @@ class WallpapersMainScreen extends BaseStatelessWidget<
                           ),
                           WallpapersProfilePicScreen(
                             key: ValueKey(pImagesData),
+                            pageStorageKey: const PageStorageKey('pImagesTab'),
                             imagesData: pImagesData,
                             imageStatus: pImageStatus,
                             onRefresh: () async{
@@ -202,7 +205,7 @@ class WallpapersMainScreen extends BaseStatelessWidget<
                               );
                             },
                           ),
-                          WallpapersAutoSetScreen(),
+                          WallpapersAutoSetScreen(key: PageStorageKey('autoSetTab')),
                         ],
                       ),
                       Container(

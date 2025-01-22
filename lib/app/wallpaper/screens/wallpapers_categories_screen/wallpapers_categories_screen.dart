@@ -24,7 +24,7 @@ class WallpapersCategoriesScreen extends BaseStatelessWidget<
     WallpapersCategoriesScreenController,
     WallpapersCategoriesScreenCubit,
     WallpapersCategoriesScreenState> {
-  WallpapersCategoriesScreen({Key? key, super.controller, super.onStateChanged, required this.categoriesData, required this.categoriesStatus, required this.onRefresh})
+  WallpapersCategoriesScreen({Key? key, PageStorageKey? pageStorageKey, super.controller, super.onStateChanged, required this.categoriesData, required this.categoriesStatus, required this.onRefresh})
       : super(key: key);
   List<Categories> categoriesData;
   BooleanStatus categoriesStatus;

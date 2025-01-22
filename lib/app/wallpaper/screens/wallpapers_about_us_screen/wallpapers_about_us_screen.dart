@@ -174,6 +174,29 @@ class WallpapersAboutUsScreen extends BaseStatelessWidget<
                       ],
                     ),
                   ),
+                  SizedBox(height: 10),
+                  Text(
+                    "Contributors",
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.grey6),
+                  ),
+                  SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Text(
+                        "Name: ",
+                        style: TextStyle(fontSize: 16, color: AppColors.grey6),
+                      ),
+                      Text(
+                        " B. Naga Simha Reddy",
+                        style: TextStyle(fontSize: 20, fontWeight: Fonts.f500, color: AppColors.grey6),
+                      ),
+                    ],
+                  ),
+                  Text(
+                    "Played a vital role in brainstorming ideas and sourcing high-quality images that contributed to the overall aesthetic of the app",
+                    style: TextStyle(fontSize: 16, color: AppColors.grey6),
+                    textAlign: TextAlign.justify,
+                  ),
                   SizedBox(height: 32,),
                   Row(
                     children: [
